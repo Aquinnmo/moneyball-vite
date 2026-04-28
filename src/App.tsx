@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { processSchedule } from './structures/Data'
 import type { Schedule } from './structures/Data'
+import { Link } from 'react-router';
 import './App.css'
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
         <div>
           <h2>Today's Games:</h2>
             {schedule.map((game) => (
-              <h3 key={game.gamePk}>{game.teams.away.team.name} @ {game.teams.home.team.name}</h3>
+              <Link to={`/game/:${game.gamePk}`}> <h3 key={game.gamePk}> {game.teams.away.team.name} @ {game.teams.home.team.name}</h3></Link>
             ))}
         </div>
       )}
