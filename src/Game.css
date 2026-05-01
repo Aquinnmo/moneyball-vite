@@ -1,0 +1,98 @@
+.game-container {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.game-header {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.game-header h1 {
+  color: var(--accent);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.game-header h2 {
+  color: var(--text);
+  margin: 0;
+  font-weight: 400;
+}
+
+.teams-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+@media (max-width: 1024px) {
+  .teams-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-block {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.team-block-title {
+  color: var(--text-h);
+  font-family: var(--heading);
+  font-size: 24px;
+  margin: 0;
+  text-align: left;
+  border-bottom: 2px solid var(--accent-border);
+  padding-bottom: 10px;
+}
+
+.table-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.table-section h4 {
+  margin: 0;
+  font-family: var(--heading);
+  color: var(--text);
+  font-size: 18px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.clean-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.clean-table th,
+.clean-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.clean-table th {
+  color: var(--text-h);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.clean-table td {
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+.clean-table tr:hover td {
+  background-color: var(--accent-bg);
+  color: var(--text-h);
+  transition: all 0.2s ease;
+}

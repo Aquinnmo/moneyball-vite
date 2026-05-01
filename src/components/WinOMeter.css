@@ -1,0 +1,49 @@
+.win-o-meter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.win-o-meter-labels {
+  display: inline-flex;
+  font-family: var(--heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.away-label {
+  color: #ef4444; /* red for away */
+  text-align: left;
+}
+
+.home-label {
+  color: #3b82f6; /* blue for home */
+  text-align: right;
+}
+
+.win-o-meter-bar {
+  display: flex;
+  flex: 1;
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.win-o-meter-fill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+.away-fill {
+  background-color: #ef4444; /* red */
+}
+
+.home-fill {
+  background-color: #3b82f6; /* blue */
+}
