@@ -1,35 +1,36 @@
 import { useEffect, useState } from 'react'
 import './Game.css'
 import { useParams } from 'react-router'
-import { processGameData, type GameData } from './structures/GameData'
-import { TeamTable } from './components/TeamTable'
-import { WinOMeter } from './components/WinOMeter'
+import type { GameData } from './types'
+import { TeamTable, WinOMeter } from './components'
+import { getGame } from './api'
 
-function GameView() {
-  const [game, setGame] = useState<GameData | null>(null)
-  const [loading, setLoading] = useState(true);
+/**
+ * Game Component
+ * 
+ * Displays the detailed box score and advanced/expected metrics for a specific 
+ * baseball game. Fetches game data using the `gamePk` route parameter bridging 
+ * into the `TeamTable` and `WinOMeter` components.
+ */
+export function Game() {
   const { gamePk } = useParams();
+  const [game, setGame] = useState<GameData | null>(null)
+  const [loading, setLoading] = useState(!!gamePk);
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     if (!gamePk) {
-      setLoading(false);
       return;
     }
 
-    fetch(`${apiUrl}game=${gamePk}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data)
-      setGame(processGameData(data));
-      setLoading(false);
-      console.log("Processed the data!");
+    getGame(gamePk)
+      .then((gameData) => {
+        setGame(gameData);
+        setLoading(false);
       })
-    .catch((err) => {
-      setLoading(false);
-      console.log("game fetching failure");
-      console.error("Error fetching today's games", err)
-    });
+      .catch((err) => {
+        setLoading(false);
+        console.error("Error fetching today's games", err);
+      });
   }, [gamePk]);
 
   return (
@@ -55,7 +56,3 @@ function GameView() {
     </div>
   ) 
 }
-
-
-
-export default GameView;

@@ -1,9 +1,9 @@
-import { z }  from 'zod';
+import { z } from 'zod';
 
 const JsonRecordSchema = z.record(z.string(), z.unknown());
-const maybe = <T extends z.ZodTypeAny>(schema: T) => schema.nullable().optional();
+export const maybe = <T extends z.ZodTypeAny>(schema: T) => schema.nullable().optional();
 
-const TeamSchema = z.object({
+export const ScheduleTeamSchema = z.object({
     team: z.object({
         id: z.number().positive(),
         name: z.string(),
@@ -17,13 +17,13 @@ const TeamSchema = z.object({
     seriesNumber: z.number().positive()
 });
 
-const ScheduleSchema = z.array(
+export const ScheduleSchema = z.array(
     z.object({
         gamePk: z.number().positive(),
         gameDate: z.string(),
         teams: z.object({
-            home: TeamSchema,
-            away: TeamSchema,
+            home: ScheduleTeamSchema,
+            away: ScheduleTeamSchema,
         }),
         venue: z.object({
             id: z.number().positive(),
@@ -32,67 +32,67 @@ const ScheduleSchema = z.array(
     })
 );
 
-const PlayerInfoSchema = z.object({
+export const PlayerInfoSchema = z.object({
     id: z.number().int(),
     fullName: maybe(z.string()),
     boxscoreName: maybe(z.string()),
 });
 
-const BasicTeamInfoSchema = z.object({
+export const BasicTeamInfoSchema = z.object({
     id: z.number().int(),
     name: maybe(z.string()),
 });
 
-const VenueInfoSchema = z.object({
+export const VenueInfoSchema = z.object({
     id: maybe(z.number().int()),
     name: maybe(z.string()),
     link: maybe(z.string()),
 });
 
-const PositionSchema = z.object({
+export const PositionSchema = z.object({
     code: maybe(z.string()),
     name: maybe(z.string()),
     type: maybe(z.string()),
     abbreviation: maybe(z.string()),
 });
 
-const PlayerStatusSchema = z.object({
+export const PlayerStatusSchema = z.object({
     code: maybe(z.string()),
     description: maybe(z.string()),
 });
 
-const PlayerGameStatusSchema = z.object({
+export const PlayerGameStatusSchema = z.object({
     isCurrentBatter: maybe(z.boolean()),
     isCurrentPitcher: maybe(z.boolean()),
     isOnBench: maybe(z.boolean()),
     isSubstitute: maybe(z.boolean()),
 });
 
-const MatchupSideSchema = z.object({
+export const MatchupSideSchema = z.object({
     code: maybe(z.string()),
     description: maybe(z.string()),
 });
 
-const InningStatsSchema = z.object({
+export const InningStatsSchema = z.object({
     runs: maybe(z.number().int()),
     hits: maybe(z.number().int()),
     errors: maybe(z.number().int()),
     leftOnBase: maybe(z.number().int()),
 });
 
-const InningSchema = z.object({
+export const InningSchema = z.object({
     num: maybe(z.number().int()),
     ordinalNum: maybe(z.string()),
     home: maybe(InningStatsSchema),
     away: maybe(InningStatsSchema),
 });
 
-const ScoreboardTeamsSchema = z.object({
+export const ScoreboardTeamsSchema = z.object({
     home: maybe(InningStatsSchema),
     away: maybe(InningStatsSchema),
 });
 
-const LinescoreSchema = z.object({
+export const LinescoreSchema = z.object({
     currentInning: maybe(z.number().int()),
     currentInningOrdinal: maybe(z.string()),
     inningState: maybe(z.string()),
@@ -102,7 +102,7 @@ const LinescoreSchema = z.object({
     innings: maybe(z.array(InningSchema)),
 });
 
-const PlayResultSchema = z.object({
+export const PlayResultSchema = z.object({
     type: maybe(z.string()),
     event: maybe(z.string()),
     eventType: maybe(z.string()),
@@ -113,7 +113,7 @@ const PlayResultSchema = z.object({
     isOut: maybe(z.boolean()),
 });
 
-const PlayAboutSchema = z.object({
+export const PlayAboutSchema = z.object({
     atBatIndex: maybe(z.number().int()),
     halfInning: maybe(z.string()),
     isTopInning: maybe(z.boolean()),
@@ -126,20 +126,20 @@ const PlayAboutSchema = z.object({
     captivatingIndex: maybe(z.number().int()),
 });
 
-const PlayCountSchema = z.object({
+export const PlayCountSchema = z.object({
     balls: maybe(z.number().int()),
     strikes: maybe(z.number().int()),
     outs: maybe(z.number().int()),
 });
 
-const MatchupSchema = z.object({
+export const MatchupSchema = z.object({
     batter: maybe(PlayerInfoSchema),
     batSide: maybe(MatchupSideSchema),
     pitcher: maybe(PlayerInfoSchema),
     pitchHand: maybe(MatchupSideSchema),
 });
 
-const CurrentPlaySchema = z.object({
+export const CurrentPlaySchema = z.object({
     result: maybe(PlayResultSchema),
     about: maybe(PlayAboutSchema),
     count: maybe(PlayCountSchema),
@@ -147,12 +147,12 @@ const CurrentPlaySchema = z.object({
     playEvents: maybe(z.array(JsonRecordSchema)),
 });
 
-const ProbablePitchersSchema = z.object({
+export const ProbablePitchersSchema = z.object({
     away: maybe(PlayerInfoSchema),
     home: maybe(PlayerInfoSchema),
 });
 
-const GameStatsSchema = z.object({
+export const GameStatsSchema = z.object({
     wpa: maybe(z.object({
         gameWpa: maybe(z.array(JsonRecordSchema)),
         lastPlays: maybe(z.array(JsonRecordSchema)),
@@ -169,13 +169,13 @@ const GameStatsSchema = z.object({
     })),
 });
 
-const TeamStatsSchema = z.object({
+export const TeamStatsSchema = z.object({
     batting: maybe(JsonRecordSchema),
     pitching: maybe(JsonRecordSchema),
     fielding: maybe(JsonRecordSchema),
 });
 
-const BoxscorePlayerSchema = z.object({
+export const BoxscorePlayerSchema = z.object({
     person: maybe(PlayerInfoSchema),
     jerseyNumber: maybe(z.string()),
     position: maybe(PositionSchema),
@@ -188,7 +188,7 @@ const BoxscorePlayerSchema = z.object({
     allPositions: maybe(z.array(PositionSchema)),
 });
 
-const BoxscoreTeamSchema = z.object({
+export const BoxscoreTeamSchema = z.object({
     team: maybe(BasicTeamInfoSchema),
     teamStats: maybe(TeamStatsSchema),
     players: maybe(z.record(z.string(), BoxscorePlayerSchema)),
@@ -199,28 +199,28 @@ const BoxscoreTeamSchema = z.object({
     battingOrder: maybe(z.array(z.number().int())),
 });
 
-const BoxscoreTeamsSchema = z.object({
+export const BoxscoreTeamsSchema = z.object({
     away: maybe(BoxscoreTeamSchema),
     home: maybe(BoxscoreTeamSchema),
 });
 
-const BoxscoreSchema = z.object({
+export const BoxscoreSchema = z.object({
     teams: maybe(BoxscoreTeamsSchema),
     info: maybe(z.array(JsonRecordSchema)),
     note: maybe(z.array(JsonRecordSchema)),
 });
 
-const OfficialSchema = z.object({
+export const OfficialSchema = z.object({
     official: maybe(PlayerInfoSchema),
     officialType: maybe(z.string()),
 });
 
-const GameInfoSchema = z.object({
+export const GameInfoSchema = z.object({
     label: maybe(z.string()),
     value: maybe(z.string()),
 });
 
-const DefenseSchema = z.object({
+export const DefenseSchema = z.object({
     pitcher: maybe(PlayerInfoSchema),
     catcher: maybe(PlayerInfoSchema),
     first: maybe(PlayerInfoSchema),
@@ -237,7 +237,7 @@ const DefenseSchema = z.object({
     team: maybe(BasicTeamInfoSchema),
 });
 
-const OffenseSchema = z.object({
+export const OffenseSchema = z.object({
     batter: maybe(PlayerInfoSchema),
     onDeck: maybe(PlayerInfoSchema),
     inHole: maybe(PlayerInfoSchema),
@@ -249,7 +249,7 @@ const OffenseSchema = z.object({
     outs: maybe(z.number().int()),
 });
 
-const TeamDataSchema = z.object({
+export const TeamDataSchema = z.object({
     id: maybe(z.number().int()),
     name: maybe(z.string()),
     link: maybe(z.string()),
@@ -267,7 +267,7 @@ const TeamDataSchema = z.object({
     active: maybe(z.boolean()),
 });
 
-const ScoreboardSchema = z.object({
+export const ScoreboardSchema = z.object({
     gamePk: maybe(z.number().int()),
     linescore: maybe(LinescoreSchema),
     teams: ScoreboardTeamsSchema,
@@ -286,14 +286,14 @@ const ScoreboardSchema = z.object({
     probablePitchers: maybe(ProbablePitchersSchema),
 });
 
-const TopPerformerSchema = z.object({
+export const TopPerformerSchema = z.object({
     player: maybe(BoxscorePlayerSchema),
     type: maybe(z.string()),
     gameScore: maybe(z.number().int()),
     hittingGameScore: maybe(z.number().int()),
 });
 
-const GameSchema = z.object({
+export const GameSchema = z.object({
     game_status_code: maybe(z.string()),
     game_status: z.string(),
     gamedayType: maybe(z.string()),
@@ -327,3 +327,99 @@ export function processGame(game : unknown): Game {
 
 export type Schedule = z.infer<typeof ScheduleSchema>;
 export type Game = z.infer<typeof GameSchema>;
+
+export const DateTimeSchema = z.object({
+    originalDate: maybe(z.string()),
+    officialDate: maybe(z.string()),
+    dayNight: maybe(z.string()),
+    time: maybe(z.string()),
+    ampm: maybe(z.string())
+});
+
+export const GameTeamSchema = z.object({
+    id: maybe(z.number().int()),
+    name: maybe(z.string()),
+    abbreviation: maybe(z.string()),
+    runs: maybe(z.number().int()),
+    hits: maybe(z.number().int()),
+    errors: maybe(z.number().int()),
+    leftOnBase: maybe(z.number().int()),
+    xBA: maybe(z.number()),
+    wOBA: maybe(z.number()),
+    xSLG: maybe(z.number()),
+    wOPS: maybe(z.number()),
+    nPA: maybe(z.number().int()),
+    expRunsFor: maybe(z.number()),
+    expWin: maybe(z.number()),
+    expWinBat: maybe(z.number()),
+    expWinPitch: maybe(z.number()),
+    expTimesOn: maybe(z.number())
+});
+
+export const BatterSchema = z.object({
+    id: z.number().int(),
+    fullName: maybe(z.string()),
+    firstName: maybe(z.string()),
+    lastName: maybe(z.string()),
+    primaryNumber: maybe(z.string()),
+    position: maybe(z.string()),
+    batHand: maybe(z.string()),
+    hits: maybe(z.number().int()),
+    runs: maybe(z.number().int()),
+    errors: maybe(z.number().int()),
+    nPA: maybe(z.number().int()),
+    xBa: maybe(z.number()),
+    wOBA: maybe(z.number()),
+    xSLG: maybe(z.number()),
+    wOPS: maybe(z.number()),
+    expTimesOnBase: maybe(z.number()),
+    expBases: maybe(z.number()),
+    maxExitVelo: maybe(z.number()),
+    avgBatSpeed: maybe(z.number()),
+    maxBatSpeed: maybe(z.number()),
+    avgExitVelo: maybe(z.number()),
+    onHomeTeam: z.boolean()
+});
+
+export const PitcherSchema = z.object({
+    id: z.number().int(),
+    fullName: maybe(z.string()),
+    firstName: maybe(z.string()),
+    lastName: maybe(z.string()),
+    primaryNumber: maybe(z.string()),
+    pitchHand: maybe(z.string()),
+    xBA: maybe(z.number()),
+    wOBA: maybe(z.number()),
+    xSLG: maybe(z.number()),
+    wOPS: maybe(z.number()),
+    expTimesOnBase: maybe(z.number()),
+    expBases: maybe(z.number()),
+    battersFaced: maybe(z.number().int()),
+    outs: maybe(z.number().int()),
+    expRunsAgainst: maybe(z.number()),
+    maxExitVelo: maybe(z.number()),
+    avgExitVelo: maybe(z.number()),
+    onHomeTeam: z.boolean()
+});
+
+export const GameDataSchema = z.object({
+    gamePk: z.number().int(),
+    dateTime: maybe(DateTimeSchema),
+    venue: maybe(z.number().int()),
+    status: maybe(z.string()),
+    teams: z.object({
+        home: maybe(GameTeamSchema),
+        away: maybe(GameTeamSchema)
+    }),
+    batters: z.array(BatterSchema),
+    pitchers: z.array(PitcherSchema)
+});
+
+export function processGameData(gameData: unknown): GameData {
+    return GameDataSchema.parse(gameData);
+}
+
+export type GameData = z.infer<typeof GameDataSchema>;
+export type Pitcher = z.infer<typeof PitcherSchema>;
+export type Batter = z.infer<typeof BatterSchema>;
+export type GameTeam = z.infer<typeof GameTeamSchema>;

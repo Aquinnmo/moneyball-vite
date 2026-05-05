@@ -1,7 +1,24 @@
 import './WinOMeter.css'
-import { type Team } from '../structures/GameData'
+import { type GameTeam } from '../types'
 
-export function WinOMeter({ home, away }: { home: Team | null | undefined, away: Team | null | undefined }) {
+export interface WinOMeterProps {
+  /** The away team data, specifically for extracting `expWin` and sub-metrics */
+  away: GameTeam | null | undefined;
+  /** The home team data, specifically for extracting `expWin` and sub-metrics */
+  home: GameTeam | null | undefined;
+}
+
+/**
+ * WinOMeter Component
+ * 
+ * Visualizes the win probability of the away and home teams using horizontal 
+ * stacked progress bars. Breaks down probability globally, and then by 
+ * expected pitching and expected batting values.
+ * 
+ * @param props.home - {@link GameTeam} The home team metrics.
+ * @param props.away - {@link GameTeam} The away team metrics.
+ */
+export function WinOMeter({ home, away }: WinOMeterProps) {
   let awayPercent = 50;
   let homePercent = 50;
 

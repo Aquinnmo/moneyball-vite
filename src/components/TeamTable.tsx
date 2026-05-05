@@ -1,4 +1,19 @@
-export function TeamTable({ team }: { team: any }) { 
+import type { GameTeam } from '../types';
+
+export interface TeamTableProps {
+  /** The team data containing basic and expected stats to display */
+  team: GameTeam | null | undefined;
+}
+
+/**
+ * TeamTable Component
+ * 
+ * Renders a data table for a single team in a game. Displays 
+ * standard offensive box score stats alongside expected (x) metrics.
+ * 
+ * @param props.team - {@link GameTeam} The parsed team stats from the API.
+ */
+export function TeamTable({ team }: TeamTableProps) { 
     return (
       <div className="team-block">
         <h3 className="team-block-title">{team?.name}</h3>
