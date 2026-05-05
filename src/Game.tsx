@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './Game.css'
 import { useParams } from 'react-router'
 import type { GameData } from './types'
-import { TeamTable, WinOMeter } from './components'
+import { TeamTable, WinOMeter, PlayerXBAGraph, PlayerWOBAGraph, PlayerXSLGGraph, PlayerWOPSGraph } from './components'
 import { getGame } from './api'
 
 /**
@@ -50,6 +50,12 @@ export function Game() {
           <div className="teams-layout">
             <TeamTable team={game?.teams.away} />
             <TeamTable team={game?.teams.home} />
+          </div>
+          <div className="graphs-layout">
+            <PlayerXBAGraph batters={game?.batters} />
+            <PlayerWOBAGraph batters={game?.batters} />
+            <PlayerXSLGGraph batters={game?.batters} />
+            <PlayerWOPSGraph batters={game?.batters} />
           </div>
         </>
       )}
