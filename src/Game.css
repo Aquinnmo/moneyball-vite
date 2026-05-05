@@ -35,13 +35,29 @@
   }
 }
 
+.graphs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+@media (max-width: 1024px) {
+  .graphs-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.graphs-layout {
+  display: grid;
+}
+
 .team-block {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.team-block-title {
+.block-title {
   color: var(--text-h);
   font-family: var(--heading);
   font-size: 24px;

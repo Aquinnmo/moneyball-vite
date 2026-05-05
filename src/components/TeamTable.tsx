@@ -16,7 +16,7 @@ export interface TeamTableProps {
 export function TeamTable({ team }: TeamTableProps) { 
     return (
       <div className="team-block">
-        <h3 className="team-block-title">{team?.name}</h3>
+        <h3 className="block-title">{team?.name}</h3>
         
         <div className="table-section">
           <h4>Basic Data</h4>

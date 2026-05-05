@@ -51,11 +51,16 @@ export function Game() {
             <TeamTable team={game?.teams.away} />
             <TeamTable team={game?.teams.home} />
           </div>
-          <div className="graphs-layout">
-            <PlayerXBAGraph batters={game?.batters} />
-            <PlayerWOBAGraph batters={game?.batters} />
-            <PlayerXSLGGraph batters={game?.batters} />
-            <PlayerWOPSGraph batters={game?.batters} />
+          <div className='graphs-container'>
+            <h3 className='block-title' id='graph-block-title'>Averages</h3>
+            <h3 className='block-title' id='graph-block-title'>Totals</h3>
+            <div className='graphs-layout'>
+              <PlayerXBAGraph batters={game?.batters} />
+              <PlayerWOBAGraph batters={game?.batters} />
+              <PlayerXSLGGraph batters={game?.batters} />
+              <PlayerWOPSGraph batters={game?.batters} />
+            </div>
+            <div className='graphs-layout'></div>
           </div>
         </>
       )}
