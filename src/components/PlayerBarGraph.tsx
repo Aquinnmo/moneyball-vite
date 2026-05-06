@@ -63,16 +63,19 @@ export function PlayerBarGraph({ title, data, roundTo }: PlayerBarGraphProps) {
         {sortedData.map(point => {
           const widthPercentage = maxVal > 0 ? (point.value / maxVal) * 100 : 0;
           return (
-            <div key={point.id} className="player-bar-row">
+            <div 
+              key={point.id} 
+              className="player-bar-row"
+              onMouseMove={(e) => handleMouseMove(e, point)}
+              onMouseLeave={handleMouseLeave}
+            >
               <div className="player-bar-label" title={point.label}>
                 {point.label}
               </div>
               <div className="player-bar-track">
                 <div
                   className={`player-bar-fill ${point.isHomeTeam ? 'home' : 'away'}`}
-                  style={{ width: `${widthPercentage}%` }}
-                  onMouseMove={(e) => handleMouseMove(e, point)}
-                  onMouseLeave={handleMouseLeave}
+                  style={{ width: `${widthPercentage}%`, position: 'relative' }}
                 >
                   <span className={`player-bar-value-label ${widthPercentage > 15 ? 'inside' : 'outside'}`}>
                     {point.value.toFixed(roundTo)}

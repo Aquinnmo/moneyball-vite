@@ -67,7 +67,12 @@ export function CenterBarGraph({ title, data, roundTo }: CenterBarGraphProps) {
           const isPositive = point.value >= 0;
 
           return (
-            <div key={point.id} className="center-bar-row">
+            <div
+              key={point.id}
+              className="center-bar-row"
+              onMouseMove={(e) => handleMouseMove(e, point)}
+              onMouseLeave={handleMouseLeave}
+            >
               <div className="center-bar-label" title={point.label}>
                 {point.label}
               </div>
@@ -78,8 +83,6 @@ export function CenterBarGraph({ title, data, roundTo }: CenterBarGraphProps) {
                     width: `${widthPercentage}%`,
                     left: isPositive ? '50%' : `calc(50% - ${widthPercentage}%)`,
                   }}
-                  onMouseMove={(e) => handleMouseMove(e, point)}
-                  onMouseLeave={handleMouseLeave}
                 >
                   <span className={`center-bar-value-label ${isPositive ? 'positive' : 'negative'} ${widthPercentage > 15 ? 'inside' : 'outside'}`}>
                     {point.value.toFixed(roundTo)}
