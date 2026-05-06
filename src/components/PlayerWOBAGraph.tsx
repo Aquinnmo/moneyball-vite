@@ -20,6 +20,22 @@ export function PlayerWOBAGraph({ batters }: PlayerWOBAGraphProps) {
       metricKey="wOBA"
       title="Weighted On-Base Average (wOBA)"
       metricLabel="wOBA"
+      roundTo={3}
+    />
+  );
+}
+
+/*
+ * @param props.batters - Array of batters containing xSLG and metadata.
+ */
+export function PlayerExpTOBGraph({ batters }: PlayerWOBAGraphProps) {
+  return (
+    <PlayerMetricGraph 
+      batters={batters}
+      metricKey="expTimesOnBase"
+      title="Expected Times On Base"
+      metricLabel="xTOB"
+      roundTo={2}
     />
   );
 }

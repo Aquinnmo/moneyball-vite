@@ -1,7 +1,7 @@
 import type { Batter } from '../types';
 import { PlayerMetricGraph } from './PlayerMetricGraph';
 
-export interface PlayerXBAGraphProps {
+export interface PlayerHitsGraphProps {
   /** The list of batters from the game data */
   batters: Batter[] | undefined;
 }
@@ -13,14 +13,14 @@ export interface PlayerXBAGraphProps {
  * 
  * @param props.batters - Array of batters containing xBa and metadata.
  */
-export function PlayerXBAGraph({ batters }: PlayerXBAGraphProps) {
+export function PlayerHitsGraph({ batters }: PlayerHitsGraphProps) {
   return (
     <PlayerMetricGraph 
       batters={batters}
-      metricKey="xBa"
-      title="Expected Batting Average (xBA)"
-      metricLabel="xBA"
-      roundTo={3}
+      metricKey="hits"
+      title="Hits"
+      metricLabel="H"
+      roundTo={0}
     />
   );
 }

@@ -353,7 +353,8 @@ export const GameTeamSchema = z.object({
     expWin: maybe(z.number()),
     expWinBat: maybe(z.number()),
     expWinPitch: maybe(z.number()),
-    expTimesOn: maybe(z.number())
+    expTimesOn: maybe(z.number()),
+    expRunsAgainst: maybe(z.number()),
 });
 
 export const BatterSchema = z.object({
@@ -372,6 +373,7 @@ export const BatterSchema = z.object({
     wOBA: maybe(z.number()),
     xSLG: maybe(z.number()),
     wOPS: maybe(z.number()),
+    tOPS: maybe(z.number()),
     expTimesOnBase: maybe(z.number()),
     expBases: maybe(z.number()),
     maxExitVelo: maybe(z.number()),
@@ -399,6 +401,9 @@ export const PitcherSchema = z.object({
     expRunsAgainst: maybe(z.number()),
     maxExitVelo: maybe(z.number()),
     avgExitVelo: maybe(z.number()),
+    avgLA: maybe(z.number()),
+    avgBatSpeed: maybe(z.number()),
+    maxBatSpeed: maybe(z.number()),
     onHomeTeam: z.boolean()
 });
 

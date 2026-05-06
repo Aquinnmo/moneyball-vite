@@ -7,6 +7,8 @@ export interface PlayerBarGraphProps {
   title: string;
   /** The generic data to display, consisting of labels, values, home/away status, and tooltip data */
   data: GraphDataPoint[];
+
+  roundTo: number;
 }
 
 /**
@@ -18,7 +20,7 @@ export interface PlayerBarGraphProps {
  * @param props.title - The title rendered above the graph
  * @param props.data - Extracted player metadata and metric value
  */
-export function PlayerBarGraph({ title, data }: PlayerBarGraphProps) {
+export function PlayerBarGraph({ title, data, roundTo }: PlayerBarGraphProps) {
   const [hoveredData, setHoveredData] = useState<GraphDataPoint | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +75,7 @@ export function PlayerBarGraph({ title, data }: PlayerBarGraphProps) {
                   onMouseLeave={handleMouseLeave}
                 >
                   <span className={`player-bar-value-label ${widthPercentage > 15 ? 'inside' : 'outside'}`}>
-                    {point.value.toFixed(3)}
+                    {point.value.toFixed(roundTo)}
                   </span>
                 </div>
               </div>

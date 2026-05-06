@@ -20,6 +20,22 @@ export function PlayerXSLGGraph({ batters }: PlayerXSLGGraphProps) {
       metricKey="xSLG"
       title="Expected Slugging Percentage (xSLG)"
       metricLabel="xSLG"
+      roundTo={3}
+    />
+  );
+}
+
+/*
+ * @param props.batters - Array of batters containing xSLG and metadata.
+ */
+export function PlayerExpBasesGraph({ batters }: PlayerXSLGGraphProps) {
+  return (
+    <PlayerMetricGraph 
+      batters={batters}
+      metricKey="expBases"
+      title="Expected Total Bases"
+      metricLabel="expBases"
+      roundTo={2}
     />
   );
 }

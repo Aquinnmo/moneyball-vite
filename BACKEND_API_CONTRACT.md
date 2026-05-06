@@ -185,7 +185,8 @@ Comprehensive game data with advanced metrics.
   "expWin": "number | null",
   "expWinBat": "number | null",
   "expWinPitch": "number | null",
-  "expTimesOn": "number"
+  "expTimesOn": "number",
+  "expRunsAgainst": "number"
 }
 ```
 
@@ -209,6 +210,7 @@ Comprehensive game data with advanced metrics.
   "wOBA": "number",
   "xSLG": "number",
   "wOPS": "number",
+  "tOPS": "number",
   "expTimesOnBase": "number",
   "expBases": "number",
   "maxExitVelo": "number",

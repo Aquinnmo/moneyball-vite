@@ -20,6 +20,19 @@ export function PlayerWOPSGraph({ batters }: PlayerWOPSGraphProps) {
       metricKey="wOPS"
       title="Weighted On-Base Plus Slugging (wOPS)"
       metricLabel="wOPS"
+      roundTo={3}
+    />
+  );
+}
+
+export function PlayerTWOPSGraph({ batters }: PlayerWOPSGraphProps) {
+  return (
+    <PlayerMetricGraph 
+      batters={batters}
+      metricKey="tOPS"
+      title="Total On-Base Plus Slugging (tOPS)"
+      metricLabel="tOPS"
+      roundTo={3}
     />
   );
 }

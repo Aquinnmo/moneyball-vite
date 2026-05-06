@@ -11,6 +11,8 @@ export interface PlayerMetricGraphProps {
   title: string;
   /** The display label for the metric in the tooltip */
   metricLabel: string;
+  
+  roundTo: number;
 }
 
 /**
@@ -24,7 +26,7 @@ export interface PlayerMetricGraphProps {
  * @param props.title - The title to display above the graph.
  * @param props.metricLabel - The label for the metric inside the graph's tooltip.
  */
-export function PlayerMetricGraph({ batters, metricKey, title, metricLabel }: PlayerMetricGraphProps) {
+export function PlayerMetricGraph({ batters, metricKey, title, metricLabel, roundTo }: PlayerMetricGraphProps) {
   if (!batters || batters.length === 0) {
     return null;
   }
@@ -57,6 +59,7 @@ export function PlayerMetricGraph({ batters, metricKey, title, metricLabel }: Pl
     <PlayerBarGraph 
       title={title} 
       data={graphData} 
+      roundTo={roundTo}
     />
   );
 }
