@@ -1,5 +1,5 @@
 import type { Pitcher } from '../types';
-import { PitcherMetricGraph } from './PitcherMetricGraph';
+import { CenteredMetricGraph } from './CenteredMetricGraph';
 
 export interface PitcherAvgLAGraphProps {
   pitchers: Pitcher[] | undefined;
@@ -7,7 +7,7 @@ export interface PitcherAvgLAGraphProps {
 
 export function PitcherAvgLAGraph({ pitchers }: PitcherAvgLAGraphProps) {
   return (
-    <PitcherMetricGraph 
+    <CenteredMetricGraph 
       pitchers={pitchers}
       metricKey="avgLA"
       title="Average Launch Angle (LA)"

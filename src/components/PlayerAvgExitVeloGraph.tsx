@@ -20,6 +20,7 @@ export function PlayerAvgExitVeloGraph({ batters }: PlayerAvgExitVeloGraphProps)
       metricKey="avgExitVelo"
       title="Avg Exit Velo"
       metricLabel="EV (Avg)"
+      roundTo={2}
     />
   );
 }
