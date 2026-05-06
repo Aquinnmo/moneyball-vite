@@ -3,6 +3,7 @@ import type { Schedule } from './types'
 import { Link } from 'react-router';
 import { getTodayGames } from './api'
 import './App.css'
+import { OrbitalSpinner } from './components';
 
 function getTodayYMD() {
   const today = new Date();
@@ -71,7 +72,7 @@ export function App() {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <OrbitalSpinner message="Finding games..."/>
       ) : (
         <div>
           <h2>Games for {currentDate}:</h2>

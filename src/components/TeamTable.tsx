@@ -65,15 +65,14 @@ export function TeamTable({ team }: TeamTableProps) {
         </div>
 
         <div className="table-section">
-          <h4>WIP - Expected Pitching Stats</h4>
+          <h4>Expected Pitching Stats</h4>
           <table className="clean-table">
             <thead>
-              <tr><th>xRuns Against</th><th>Runs Allowed</th><th>Pitching Above Expected</th></tr>
+              <tr><th>xRuns Against</th><th>Pitching Above Expected</th></tr>
             </thead>
             <tbody>
               <tr>
                 <td>{team?.expRunsAgainst != null ? Number(team.expRunsAgainst).toFixed(2) : 'null'}</td>
-                <td>{team?.runs != null ? Number(team.runs) : 'null'}</td>
                 <td>{team?.expRunsAgainst && team?.runs != null ? Number(team.expRunsAgainst - team?.runs).toFixed(2) : 'null'}</td>
               </tr>
             </tbody>

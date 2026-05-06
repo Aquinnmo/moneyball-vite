@@ -10,7 +10,7 @@ export function PitcherOutsGraph({ pitchers }: PitcherBattersFacedGraphProps) {
     <PitcherMetricGraph 
       pitchers={pitchers}
       metricKey="outs"
-      title="Outs"
+      title="Outs Recorded"
       metricLabel="Outs"
       roundTo={0}
     />

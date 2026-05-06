@@ -23,3 +23,4 @@ export * from './PitcherExpBasesGraph';
 export * from './PitcherExpRunsAgainstGraph';
 export * from './PitcherAvgBatSpeedGraph';
 export * from './PitcherMaxBatSpeedGraph';
+export * from './OrbitalSpinner';

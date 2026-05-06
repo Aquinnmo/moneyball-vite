@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import './Game.css'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router';
 import type { GameData } from './types'
 import { 
+  OrbitalSpinner,
   TeamTable, 
   WinOMeter, 
   PlayerXBAGraph, 
@@ -59,16 +60,16 @@ export function Game() {
   }, [gamePk]);
 
   return (
-    <div className="game-container">
+    <div className="game-container" id='game'>
       {loading ? (
-        <p>Loading...</p>
+        <OrbitalSpinner message="Crunching game data..." />
       ) : (
         <>
           <div className="game-header">
             <h1>{`${game?.teams.away?.name} @ ${game?.teams.home?.name}`}</h1>
             <h2>{`${game?.dateTime?.officialDate} - ${game?.dateTime?.time} ${game?.dateTime?.ampm}${game?.status == 'F' ? ' (F)' : ''}`}</h2>
           </div>
-          <div className='win-o-meter'>
+          <div className='win-o-meter' id="win-o-meter">
             <h2>Win-O-Meter</h2>
             <WinOMeter home={game?.teams.home} away={game?.teams.away} />
           </div>
@@ -77,7 +78,7 @@ export function Game() {
             <TeamTable team={game?.teams.away} />
             <TeamTable team={game?.teams.home} />
           </div>
-          <h2 className='section-title'>Batter Info</h2>
+          <h2 className='section-title' id="batters">Batter Info</h2>
           <div className='graphs-container'>
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
             <h3 className='block-title' id='graph-block-title'>Totals and Maximums</h3>
@@ -98,7 +99,7 @@ export function Game() {
               <PlayerMaxBatSpeedGraph batters={game?.batters} />
             </div>
           </div>
-          <h2 className='section-title'>Pitcher Info</h2>
+          <h2 className='section-title' id="pitchers">Pitcher Info</h2>
           <div className='graphs-container'>
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
             <h3 className='block-title' id='graph-block-title'>Totals and Maximums</h3>
