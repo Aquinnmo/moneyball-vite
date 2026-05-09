@@ -67,16 +67,16 @@ export function App() {
     <div>
       <h1>Welcome to Moneyball</h1>
       
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={handlePrevDay}>Previous Day</button>
+      <div className="date-controls">
+        <button className="date-btn" onClick={handlePrevDay}>Previous Day</button>
         <input 
           type="date" 
           value={currentDate} 
           max={yesterdayStr}
+          className="date-input"
           onChange={handleDateChange} 
-          style={{ margin: '0 10px' }}
         />
-        <button onClick={handleNextDay} disabled={currentDate >= yesterdayStr}>Next Day</button>
+        <button className="date-btn" onClick={handleNextDay} disabled={currentDate >= yesterdayStr}>Next Day</button>
       </div>
 
       {loading ? (
