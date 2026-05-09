@@ -81,7 +81,7 @@ export function Game() {
           <h2 className='section-title' id="batters">Batter Info</h2>
           <div className='graphs-container'>
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
-            <h3 className='block-title' id='graph-block-title'>Totals and Maximums</h3>
+            <h3 className='block-title' id='graph-block-title'>Totals</h3>
             <div className='graphs-layout'>
               <PlayerXBAGraph batters={game?.batters} />
               <PlayerWOBAGraph batters={game?.batters} />

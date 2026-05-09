@@ -75,6 +75,10 @@ export function TeamTable({ team }: TeamTableProps) {
                 <td>{team?.expRunsAgainst != null ? Number(team.expRunsAgainst).toFixed(2) : 'null'}</td>
                 <td>{team?.expRunsAgainst && team?.runs != null ? Number(team.expRunsAgainst - team?.runs).toFixed(2) : 'null'}</td>
               </tr>
+              <tr>
+                <td>This is fine</td>
+                <td>This needs to be altered to be xPitching - runs against (instead of runs for)</td>
+              </tr>
             </tbody>
           </table>
         </div>

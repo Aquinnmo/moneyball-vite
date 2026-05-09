@@ -7,7 +7,7 @@ import { Game } from './Game.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename='moneyball-vite'>
       <Routes>
         <Route path="game/:gamePk" element={<Game />} />
         <Route path="/" element={<App />}/>
