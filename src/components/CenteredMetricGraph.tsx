@@ -2,7 +2,7 @@ import type { Pitcher } from '../types';
 import type { GraphDataPoint } from '../types';
 import { CenterBarGraph } from './CenterBarGraph';
 
-export interface PitcherMetricGraphProps {
+export interface CenteredMetricGraphProps {
   /** The list of pitchers from the game data */
   pitchers: Pitcher[] | undefined;
   /** The key in the Pitcher object to plot */
@@ -21,7 +21,7 @@ export interface PitcherMetricGraphProps {
  * A generic wrapper component that transforms Pitcher data into the generic 
  * GraphDataPoint format required by the PlayerBarGraph for a specific metric.
  */
-export function CenteredMetricGraph({ pitchers, metricKey, title, metricLabel, roundTo }: PitcherMetricGraphProps) {
+export function CenteredMetricGraph({ pitchers, metricKey, title, metricLabel, roundTo }: CenteredMetricGraphProps) {
   if (!pitchers || pitchers.length === 0) {
     return null;
   }
