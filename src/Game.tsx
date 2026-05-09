@@ -6,28 +6,9 @@ import {
   OrbitalSpinner,
   TeamTable, 
   WinOMeter, 
-  PlayerXBAGraph, 
-  PlayerWOBAGraph, 
-  PlayerXSLGGraph, 
-  PlayerWOPSGraph, 
-  PlayerHitsGraph, 
-  PlayerExpBasesGraph, 
-  PlayerExpTOBGraph, 
-  PlayerTWOPSGraph,
-  PlayerAvgExitVeloGraph,
-  PlayerMaxExitVeloGraph,
-  PlayerAvgBatSpeedGraph,
-  PlayerMaxBatSpeedGraph,
-  PitcherXBAAGraph,
-  PitcherWOBAAGraph,
-  PitcherXSLGAGraph,
-  PitcherOutsGraph,
-  PitcherAvgLAGraph,
-  PitcherExpTimesOnBaseGraph,
-  PitcherExpBasesGraph,
-  PitcherExpRunsAgainstGraph,
-  PitcherAvgBatSpeedGraph,
-  PitcherMaxBatSpeedGraph
+  PlayerMetricGraph,
+  PitcherMetricGraph,
+  CenteredMetricGraph
 } from './components'
 import { getGame } from './api'
 
@@ -83,20 +64,20 @@ export function Game() {
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
             <h3 className='block-title' id='graph-block-title'>Totals</h3>
             <div className='graphs-layout'>
-              <PlayerXBAGraph batters={game?.batters} />
-              <PlayerWOBAGraph batters={game?.batters} />
-              <PlayerXSLGGraph batters={game?.batters} />
-              <PlayerWOPSGraph batters={game?.batters} />
-              <PlayerAvgExitVeloGraph batters={game?.batters} />
-              <PlayerAvgBatSpeedGraph batters={game?.batters} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="xBa" title="Expected Batting Average (xBA)" metricLabel="xBA" roundTo={3} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="wOBA" title="Weighted On-Base Average (wOBA)" metricLabel="wOBA" roundTo={3} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="xSLG" title="Expected Slugging Percentage (xSLG)" metricLabel="xSLG" roundTo={3} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="wOPS" title="Weighted On-Base Plus Slugging (wOPS)" metricLabel="wOPS" roundTo={3} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="avgExitVelo" title="Avg Exit Velo" metricLabel="EV (Avg)" roundTo={2} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="avgBatSpeed" title="Avg Bat Speed" metricLabel="BS (Avg)" roundTo={2} />
             </div>
             <div className='graphs-layout'>
-              <PlayerHitsGraph batters={game?.batters} />
-              <PlayerExpTOBGraph batters={game?.batters} />
-              <PlayerExpBasesGraph batters={game?.batters} />
-              <PlayerTWOPSGraph batters={game?.batters} />
-              <PlayerMaxExitVeloGraph batters={game?.batters} />
-              <PlayerMaxBatSpeedGraph batters={game?.batters} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="hits" title="Hits" metricLabel="H" roundTo={0} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="expTimesOnBase" title="Expected Times On Base" metricLabel="xTOB" roundTo={2} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="expBases" title="Expected Total Bases" metricLabel="expBases" roundTo={2} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="tOPS" title="Total On-Base Plus Slugging (tOPS)" metricLabel="tOPS" roundTo={3} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="maxExitVelo" title="Max Exit Velo" metricLabel="EV (Max)" roundTo={2} />
+              <PlayerMetricGraph batters={game?.batters} metricKey="maxBatSpeed" title="Max Bat Speed" metricLabel="BS (Max)" roundTo={2} />
             </div>
           </div>
           <h2 className='section-title' id="pitchers">Pitcher Info</h2>
@@ -104,18 +85,18 @@ export function Game() {
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
             <h3 className='block-title' id='graph-block-title'>Totals and Maximums</h3>
             <div className='graphs-layout'>
-              <PitcherXBAAGraph pitchers={game?.pitchers} />
-              <PitcherWOBAAGraph pitchers={game?.pitchers} />
-              <PitcherXSLGAGraph pitchers={game?.pitchers} />
-              <PitcherAvgLAGraph pitchers={game?.pitchers} />
-              <PitcherAvgBatSpeedGraph pitchers={game?.pitchers} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="xBA" title="Expected Batting Average Against (xBAA)" metricLabel="xBAA" roundTo={3} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="wOBA" title="Weighted On-Base Average Against (wOBAA)" metricLabel="wOBAA" roundTo={3} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="xSLG" title="Expected Slugging Percentage Against (xSLGA)" metricLabel="xSLGA" roundTo={3} />
+              <CenteredMetricGraph pitchers={game?.pitchers} metricKey="avgLA" title="Average Launch Angle (LA)" metricLabel="Avg LA" roundTo={2} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="avgBatSpeed" title="Average Bat Speed Against" metricLabel="Avg Bat Speed" roundTo={2} />
             </div>
             <div className='graphs-layout'>
-              <PitcherExpRunsAgainstGraph pitchers={game?.pitchers} />
-              <PitcherExpTimesOnBaseGraph pitchers={game?.pitchers} />
-              <PitcherExpBasesGraph pitchers={game?.pitchers} />
-              <PitcherOutsGraph pitchers={game?.pitchers} />
-              <PitcherMaxBatSpeedGraph pitchers={game?.pitchers} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="expRunsAgainst" title="Expected Runs Against" metricLabel="Exp Runs Against" roundTo={2} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="expTimesOnBase" title="Expected Times On Base" metricLabel="Exp Times On Base" roundTo={2} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="expBases" title="Expected Bases" metricLabel="Exp Bases" roundTo={2} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="outs" title="Outs Recorded" metricLabel="Outs" roundTo={0} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="maxBatSpeed" title="Max Bat Speed Against" metricLabel="Max Bat Speed" roundTo={2} />
             </div>
           </div>
         </>
