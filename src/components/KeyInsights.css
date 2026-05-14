@@ -1,25 +1,89 @@
 .key-insights-container {
-  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 4px 0;
+}
+
+.insights-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--hologram-cyan-glow);
+  padding-bottom: 8px;
+}
+
+.insights-header h2 {
+  color: var(--hologram-cyan);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.insights-header span {
+  color: var(--hologram-cyan);
+  font-family: var(--mono);
+  font-size: 12px;
+  opacity: 0.68;
+  text-transform: uppercase;
 }
 
 .insights-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.insight-tag {
-  font-family: var(--heading, monospace);
-  font-size: 16px;
-  font-weight: bold;
+.insight-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px;
+  text-align: left;
+}
+
+.insight-card strong {
+  color: var(--hologram-cyan);
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.insight-label,
+.insight-metric {
+  color: var(--hologram-cyan);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.35;
   text-transform: uppercase;
-  color: var(--hologram-cyan, #00f2ff);
-  text-shadow: 0 0 8px var(--hologram-cyan-glow, rgba(0,242,255,0.6));
-  border: 1px solid var(--hologram-cyan, #00f2ff);
-  background: var(--hologram-panel-bg, rgba(0,40,60,0.3));
-  box-shadow: 0 0 10px var(--hologram-cyan-glow, rgba(0,242,255,0.2));
-  padding: 8px 16px;
-  border-radius: 4px;
+}
+
+.insight-label {
   letter-spacing: 1px;
+  opacity: 0.62;
+}
+
+.insight-metric {
+  opacity: 0.82;
+}
+
+@media (max-width: 1080px) {
+  .insights-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .insights-list {
+    grid-template-columns: 1fr;
+  }
 }

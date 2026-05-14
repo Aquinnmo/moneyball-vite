@@ -9,7 +9,8 @@ import {
   PlayerMetricGraph,
   PitcherMetricGraph,
   CenteredMetricGraph,
-  KeyInsights
+  KeyInsights,
+  AdvancedGameAnalysis
 } from './components'
 import { getGame } from './api'
 
@@ -55,6 +56,7 @@ export function Game() {
             <h2>Win-O-Meter</h2>
             <WinOMeter home={game?.teams.home} away={game?.teams.away} />
           </div>
+          <AdvancedGameAnalysis game={game} />
           <h2 className='section-title'>Team Info</h2>
           <div className="teams-layout">
             <TeamTable team={game?.teams.away} />

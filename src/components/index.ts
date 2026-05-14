@@ -7,3 +7,4 @@ export * from './PitcherMetricGraph';
 export * from './CenteredMetricGraph';
 export * from './OrbitalSpinner';
 export * from './KeyInsights';
+export * from './AdvancedGameAnalysis';
