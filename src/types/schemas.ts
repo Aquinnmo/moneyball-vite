@@ -420,7 +420,8 @@ export const GameDataSchema = z.object({
         away: maybe(GameTeamSchema)
     }),
     batters: z.array(BatterSchema),
-    pitchers: z.array(PitcherSchema)
+    pitchers: z.array(PitcherSchema),
+    isStolenGame: z.boolean()
 });
 
 export function processGameData(gameData: unknown): GameData {

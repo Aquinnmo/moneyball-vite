@@ -162,7 +162,8 @@ Comprehensive game data with advanced metrics.
     "away": "Team object"
   },
   "batters": [ "Batter objects" ],
-  "pitchers": [ "Pitcher objects" ]
+  "pitchers": [ "Pitcher objects" ],
+  "isStolenGame": "boolean",
 }
 ```
 

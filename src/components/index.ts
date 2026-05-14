@@ -6,3 +6,4 @@ export * from './PlayerMetricGraph';
 export * from './PitcherMetricGraph';
 export * from './CenteredMetricGraph';
 export * from './OrbitalSpinner';
+export * from './KeyInsights';

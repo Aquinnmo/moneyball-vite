@@ -29,23 +29,20 @@ export function PlayerBarGraph({ title, data, roundTo }: PlayerBarGraphProps) {
   const maxVal = Math.max(...data.map(d => d.value), 0);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, point: GraphDataPoint) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    
-    // Default position slightly offset from the mouse pointer
-    let x = e.clientX - rect.left + 15;
-    let y = e.clientY - rect.top + 15;
+    // Fixed pointer position
+    let x = e.clientX + 15;
+    let y = e.clientY + 15;
 
-    // Check if tooltip might overflow the container or view width
+    // Check if tooltip might overflow the view width
     const estimatedTooltipWidth = 230; // Estimated width
     if (e.clientX + estimatedTooltipWidth > window.innerWidth) {
-      x = e.clientX - rect.left - estimatedTooltipWidth - 15;
+      x = e.clientX - estimatedTooltipWidth - 15;
     }
 
     // Check if tooltip might overflow the bottom of the screen
     const estimatedTooltipHeight = 280; // Estimated height for tooltip with a few rows
     if (e.clientY + estimatedTooltipHeight > window.innerHeight) {
-      y = e.clientY - rect.top - estimatedTooltipHeight - 15;
+      y = window.innerHeight - estimatedTooltipHeight - 15;
     }
 
     setHoveredData(point);
