@@ -1,0 +1,25 @@
+.key-insights-container {
+  margin: 20px 0;
+}
+
+.insights-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.insight-tag {
+  font-family: var(--heading, monospace);
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--hologram-cyan, #00f2ff);
+  text-shadow: 0 0 8px var(--hologram-cyan-glow, rgba(0,242,255,0.6));
+  border: 1px solid var(--hologram-cyan, #00f2ff);
+  background: var(--hologram-panel-bg, rgba(0,40,60,0.3));
+  box-shadow: 0 0 10px var(--hologram-cyan-glow, rgba(0,242,255,0.2));
+  padding: 8px 16px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}

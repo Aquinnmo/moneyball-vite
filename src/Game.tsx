@@ -8,7 +8,8 @@ import {
   WinOMeter, 
   PlayerMetricGraph,
   PitcherMetricGraph,
-  CenteredMetricGraph
+  CenteredMetricGraph,
+  KeyInsights
 } from './components'
 import { getGame } from './api'
 
@@ -59,6 +60,7 @@ export function Game() {
             <TeamTable team={game?.teams.away} />
             <TeamTable team={game?.teams.home} />
           </div>
+          <KeyInsights game={game} />
           <h2 className='section-title' id="batters">Batter Info</h2>
           <div className='graphs-container'>
             <h3 className='block-title' id='graph-block-title'>Averages</h3>
@@ -89,8 +91,8 @@ export function Game() {
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="wOBA" title="Weighted On-Base Average Against (wOBAA)" metricLabel="wOBAA" roundTo={3} />
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="xSLG" title="Expected Slugging Percentage Against (xSLGA)" metricLabel="xSLGA" roundTo={3} />
               <CenteredMetricGraph pitchers={game?.pitchers} metricKey="avgLA" title="Average Launch Angle (LA)" metricLabel="Avg LA" roundTo={2} />
-              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="avgBatSpeed" title="Average Bat Speed Against" metricLabel="Avg Bat Speed" roundTo={2} />,
-              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="strikeouts" title="Strikeouts" metricLabel="K" roundTo={0} />,
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="avgBatSpeed" title="Average Bat Speed Against" metricLabel="Avg Bat Speed" roundTo={2} />
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="strikeouts" title="Strikeouts" metricLabel="K" roundTo={0} />
             </div>
             <div className='graphs-layout'>
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="expRunsAgainst" title="Expected Runs Against" metricLabel="Exp Runs Against" roundTo={2} />
@@ -98,7 +100,7 @@ export function Game() {
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="expBases" title="Expected Bases" metricLabel="Exp Bases" roundTo={2} />
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="outs" title="Outs Recorded" metricLabel="Outs" roundTo={0} />
               <PitcherMetricGraph pitchers={game?.pitchers} metricKey="maxBatSpeed" title="Max Bat Speed Against" metricLabel="Max Bat Speed" roundTo={2} />
-              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="hitsAgainst" title="Hits Against" metricLabel="Hits Against" roundTo={0} />,
+              <PitcherMetricGraph pitchers={game?.pitchers} metricKey="hitsAgainst" title="Hits Against" metricLabel="Hits Against" roundTo={0} />
             </div>
           </div>
         </>

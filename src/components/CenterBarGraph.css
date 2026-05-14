@@ -8,19 +8,21 @@
 
 .center-bar-graph-title {
   margin: 0;
-  font-family: var(--heading);
-  color: var(--text-h);
+  font-family: var(--mono);
+  color: var(--hologram-cyan);
   font-size: 20px;
   text-align: left;
   font-weight: 500;
-  border-bottom: 2px solid var(--accent-border);
+  border-bottom: 2px solid var(--hologram-cyan-glow);
   padding-bottom: 10px;
+  text-shadow: 0 0 8px var(--hologram-cyan-glow);
+  text-transform: uppercase;
 }
 
 .center-bar-graph {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
   position: relative;
 }
@@ -35,21 +37,24 @@
 .center-bar-label {
   width: 150px;
   text-align: right;
-  font-family: var(--sans);
-  color: var(--text);
+  font-family: var(--mono);
+  color: var(--hologram-cyan);
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
+  text-shadow: 0 0 4px var(--hologram-cyan-glow);
 }
 
 .center-bar-track {
   flex: 1;
   height: 28px;
-  background-color: var(--code-bg);
-  border-radius: 4px;
+  background-color: var(--hologram-panel-bg);
+  border: 1px solid var(--hologram-cyan-glow);
+  border-radius: 0px;
   position: relative;
+  box-shadow: inset 0 0 8px var(--hologram-cyan-glow);
 }
 
 /* Centerline */
@@ -60,7 +65,8 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background-color: var(--accent-border);
+  background-color: var(--hologram-cyan);
+  box-shadow: 0 0 8px var(--hologram-cyan-glow);
   z-index: 1;
   transform: translateX(-50%);
 }
@@ -69,18 +75,22 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  border-radius: 2px; /* Slightly sharper inner edges look better on centered charts */
+  border-radius: 0px; /* Sharp edges for sci-fi look */
   transition: width 0.3s ease, left 0.3s ease;
   z-index: 2; /* Render slightly above centerline so hover doesn't blip */
 }
 
 /* Base Team Colors */
 .center-bar-fill.home {
-  background-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.85); /* WinOMeter blue, more expressive */
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
 }
 
 .center-bar-fill.away {
-  background-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.85); /* WinOMeter red, more expressive */
+  border: 1px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
 }
 
 .center-bar-fill:hover {
@@ -92,49 +102,54 @@
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--mono);
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 0px 0px 4px #000;
 }
 
 /* Positive bars grow right */
 .center-bar-value-label.positive.inside {
-  color: var(--bg);
+  color: #fff;
   right: 8px;
 }
 
 .center-bar-value-label.positive.outside {
-  color: var(--text);
+  color: var(--hologram-cyan);
   left: calc(100% + 8px);
 }
 
 /* Negative bars grow left (text floats to the left edge of the bar) */
 .center-bar-value-label.negative.inside {
-  color: var(--bg);
+  color: #fff;
   left: 8px;
 }
 
 .center-bar-value-label.negative.outside {
-  color: var(--text);
+  color: var(--hologram-cyan);
   right: calc(100% + 8px);
 }
 
 .center-bar-tooltip {
-  position: absolute;
-  background-color: var(--bg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  padding: 12px;
-  border-radius: 8px;
-  z-index: 10;
+  position: fixed; /* Fix overlap issues within responsive flex containers */
+  background-color: rgba(0, 15, 22, 0.98); /* Reduced transparency */
+  border: 1px solid var(--hologram-cyan);
+  box-shadow: 0 0 15px var(--hologram-cyan-glow), inset 0 0 15px var(--hologram-cyan-glow);
+  padding: 14px;
+  border-radius: 4px;
+  z-index: 9999;
   pointer-events: none;
   min-width: 150px;
 }
 
 .center-bar-tooltip h4 {
   margin: 0 0 8px 0;
-  font-family: var(--heading);
-  color: var(--text-h);
+  font-family: var(--mono);
+  color: var(--hologram-cyan);
   font-size: 16px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--hologram-cyan-glow);
+  padding-bottom: 4px;
 }
 
 .center-bar-tooltip-grid {
@@ -144,16 +159,17 @@
 }
 
 .center-bar-tooltip-label {
-  color: var(--text);
-  font-family: var(--sans);
+  color: #aaa;
+  font-family: var(--mono);
   font-size: 12px;
   font-weight: 500;
   text-align: left;
 }
 
 .center-bar-tooltip-val {
-  color: var(--text-h);
+  color: var(--hologram-cyan);
   font-family: var(--mono);
   font-size: 12px;
   text-align: right;
+  text-shadow: 0 0 4px var(--hologram-cyan-glow);
 }
