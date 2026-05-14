@@ -1,7 +1,13 @@
-# Architecture
+# Architecture: Project Jarvis
+
+## Visual Identity
+Moneyball follows the "Hologram" (Project Jarvis) design language, emphasizing a data-centric, semi-transparent, and high-luminosity interface. This is achieved through:
+- **Monochromatic Palette**: Primary use of cyan-electric blue for focus and navy for depth.
+- **Layering**: High dependency on semi-transparent panels and background scanlines to create a multi-dimensional HUD feel.
+- **Feedback**: Dynamic glow effects and "flicker" animations that respond to user presence.
 
 ## Data Flow
-The Moneyball Vite application follows a unidirectional data flow pattern, ensuring strong typing and centralized data fetching:
+The application follows a unidirectional data flow pattern, ensuring strong typing and centralized data fetching:
 
 1. **API**: All network requests to external endpoints are handled exclusively within `src/api/client.ts`. This client includes error handling and retry logic.
 2. **Validation/Schemas**: Raw API responses are immediately parsed and validated using Zod schemas located in `src/types/schemas.ts`.

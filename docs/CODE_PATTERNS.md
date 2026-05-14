@@ -1,6 +1,9 @@
 # Code Patterns & Best Practices
 
 ## Preferred Patterns
+- **Visual Atoms**: Always use the `--hologram-*` CSS variables defined in [src/index.css](src/index.css#L1) for all styling.
+- **Panel Layouts**: Use the `.hologram-bracket` class or equivalent pseudo-element L-shapes for container boundaries instead of solid borders.
+- **Typography**: Utilize monospaced fonts exclusively to reinforce the technical HUD aesthetic.
 - **Exports**: Use named exports exclusively for components and functions across the codebase. Default exports should generally be avoided.
 - **Component Typing**: Use explicit TypeScript interfaces (`Props`) for all components, importing the required schema types from `src/types`.
 - **JSDoc Comments**: Add a JSDoc block to every component exposing its purpose, props, and standard usage.
