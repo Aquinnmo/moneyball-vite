@@ -1,0 +1,130 @@
+.player-detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.player-detail-panel h3 {
+  color: var(--hologram-cyan);
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.player-story-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.player-story-card {
+  background: var(--hologram-panel-bg);
+  border: 1px solid var(--hologram-cyan-glow);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding: 14px;
+  text-align: left;
+}
+
+.player-story-card span,
+.player-story-card strong,
+.player-story-card small,
+.player-story-card b,
+.player-story-card em,
+.player-evidence-details summary {
+  color: var(--hologram-cyan);
+}
+
+.player-story-card span,
+.player-story-card small,
+.player-evidence-details summary {
+  font-size: 12px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.player-story-card strong {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.player-story-card b {
+  font-size: 20px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.player-story-card em {
+  font-size: 12px;
+  font-style: normal;
+  opacity: 0.86;
+  text-transform: uppercase;
+}
+
+.player-evidence-details summary {
+  cursor: pointer;
+  text-align: left;
+}
+
+.player-detail-table-wrap {
+  margin-top: 14px;
+  overflow-x: auto;
+}
+
+.player-detail-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.player-detail-table th,
+.player-detail-table td {
+  border-bottom: 1px solid var(--hologram-cyan-glow);
+  color: var(--hologram-cyan);
+  padding: 9px 10px;
+  text-align: right;
+}
+
+.player-detail-table th:first-child,
+.player-detail-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--hologram-bg);
+  text-align: left;
+}
+
+.player-detail-table th {
+  border-bottom-style: dashed;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.player-detail-table td {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.player-detail-table tbody tr:hover td {
+  background: var(--hologram-panel-bg);
+  opacity: 1;
+}
+
+@media (max-width: 1080px) {
+  .player-story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .player-story-grid {
+    grid-template-columns: 1fr;
+  }
+}

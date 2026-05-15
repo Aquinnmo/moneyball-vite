@@ -50,16 +50,14 @@
 .insight-card strong {
   color: var(--hologram-cyan);
   font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .insight-label,
-.insight-metric {
+.insight-metric,
+.insight-card small {
   color: var(--hologram-cyan);
   font-family: var(--mono);
   font-size: 12px;
@@ -73,7 +71,13 @@
 }
 
 .insight-metric {
-  opacity: 0.82;
+  font-size: 20px;
+  opacity: 0.9;
+  text-transform: none;
+}
+
+.insight-card small {
+  opacity: 0.72;
 }
 
 @media (max-width: 1080px) {

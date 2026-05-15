@@ -5,23 +5,29 @@ import { getTodayGames } from './api'
 import './App.css'
 import { OrbitalSpinner } from './components';
 
-function getYesterdayYMD() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yyyy = yesterday.getFullYear();
-  const mm = String(yesterday.getMonth() + 1).padStart(2, '0');
-  const dd = String(yesterday.getDate()).padStart(2, '0');
+function formatDateYMD(date: Date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
+}
+
+function getAvailableDateWindow() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return {
+    todayStr: formatDateYMD(today),
+    latestAvailableDateStr: formatDateYMD(yesterday),
+  };
 }
 
 function addDays(dateStr: string, days: number) {
   const parts = dateStr.split('-');
   const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
   d.setDate(d.getDate() + days);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return formatDateYMD(d);
 }
 
 /**
@@ -32,10 +38,12 @@ function addDays(dateStr: string, days: number) {
  * individual games to view deeper advanced stats.
  */
 export function App() {
-  const yesterdayStr = getYesterdayYMD();
+  const { todayStr, latestAvailableDateStr } = getAvailableDateWindow();
   const [schedule, setSchedule] = useState<Schedule>([])
   const [loading, setLoading] = useState(true);
-  const [currentDate, setCurrentDate] = useState(() => yesterdayStr);
+  const [currentDate, setCurrentDate] = useState(() => latestAvailableDateStr);
+  const nextDate = addDays(currentDate, 1);
+  const isNextDayDisabled = nextDate >= todayStr;
 
   useEffect(() => {
     getTodayGames(currentDate)
@@ -51,15 +59,15 @@ export function App() {
 
   const handlePrevDay = () => { setLoading(true); setCurrentDate((prev) => addDays(prev, -1)); };
   const handleNextDay = () => {
-    if (currentDate < yesterdayStr) {
+    if (!isNextDayDisabled) {
       setLoading(true);
-      setCurrentDate((prev) => addDays(prev, 1));
+      setCurrentDate(nextDate);
     }
   };
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
       setLoading(true);
-      setCurrentDate(e.target.value);
+      setCurrentDate(e.target.value > latestAvailableDateStr ? latestAvailableDateStr : e.target.value);
     }
   };
 
@@ -72,11 +80,11 @@ export function App() {
         <input 
           type="date" 
           value={currentDate} 
-          max={yesterdayStr}
+          max={latestAvailableDateStr}
           className="date-input"
           onChange={handleDateChange} 
         />
-        <button className="date-btn" onClick={handleNextDay} disabled={currentDate >= yesterdayStr}>Next Day</button>
+        <button className="date-btn" onClick={handleNextDay} disabled={isNextDayDisabled}>Next Day</button>
       </div>
 
       {loading ? (

@@ -1,4 +1,5 @@
-import { type GameData } from '../types';
+import type { GameData } from '../types';
+import { formatNumber, formatPercent, formatSigned, getNumber } from './format';
 import './KeyInsights.css';
 
 export interface KeyInsightsProps {
@@ -9,110 +10,105 @@ export interface KeyInsightsProps {
 interface Insight {
   id: string;
   label: string;
-  value: string;
+  subject: string;
   metric: string;
+  tag: string;
 }
 
-function getNumber(value: number | null | undefined): number {
-  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
-}
-
-function formatNumber(value: number, digits: number): string {
-  return value.toFixed(digits);
-}
-
-function formatPercent(value: number | null | undefined): string {
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
-    return '--';
-  }
-
-  return `${(value * 100).toFixed(1)}%`;
+function teamLabel(game: GameData, side: 'away' | 'home'): string {
+  const team = game.teams[side];
+  return team?.abbreviation || team?.name || side.toUpperCase();
 }
 
 /**
  * KeyInsights Component
  *
- * Turns the processed game metrics into a concise, readable game story. The
- * cards favor natural language while still exposing the underlying data point.
+ * Selects a few API-backed takeaways and presents them as compact stat callouts.
  *
  * @param props.game - The processed game payload returned by the API.
  */
 export function KeyInsights({ game }: KeyInsightsProps) {
   if (!game) return null;
 
-  const away = game.teams.away;
-  const home = game.teams.home;
-
-  if (!away || !home) {
-    return null;
-  }
-
-  const awayName = away.name || away.abbreviation || 'Away';
-  const homeName = home.name || home.abbreviation || 'Home';
-  const awayShort = away.abbreviation || awayName;
-  const homeShort = home.abbreviation || homeName;
-  const awayExpectedDiff = getNumber(away.expRunsFor) - getNumber(away.expRunsAgainst);
-  const homeExpectedDiff = getNumber(home.expRunsFor) - getNumber(home.expRunsAgainst);
-  const awayFinishing = getNumber(away.runs) - getNumber(away.expRunsFor);
-  const homeFinishing = getNumber(home.runs) - getNumber(home.expRunsFor);
-  const awayContact = getNumber(away.wOBA) + getNumber(away.xSLG);
-  const homeContact = getNumber(home.wOBA) + getNumber(home.xSLG);
+  const awayShort = teamLabel(game, 'away');
+  const homeShort = teamLabel(game, 'home');
+  const outcome = game.summary?.expectedOutcome;
+  const differentials = game.summary?.differentials;
+  const shares = game.summary?.shares;
   const insights: Insight[] = [];
 
-  if (game.isStolenGame) {
-    insights.push({
-      id: 'stolen-game',
-      label: 'Game Type',
-      value: 'Stolen',
-      metric: 'Pitching edge',
-    });
-  }
-
-  if (Math.abs(awayExpectedDiff - homeExpectedDiff) >= 0.75) {
-    const leader = awayExpectedDiff > homeExpectedDiff ? awayName : homeName;
-    const leaderDiff = awayExpectedDiff > homeExpectedDiff ? awayExpectedDiff : homeExpectedDiff;
-
-    insights.push({
-      id: 'expected-control',
-      label: 'xRun Edge',
-      value: leader,
-      metric: `${formatNumber(leaderDiff, 2)} xRD`,
-    });
-  }
-
-  if (Math.abs(awayFinishing - homeFinishing) >= 1) {
-    const leader = awayFinishing > homeFinishing ? awayName : homeName;
-    const finishing = awayFinishing > homeFinishing ? awayFinishing : homeFinishing;
-
-    insights.push({
-      id: 'finishing-edge',
-      label: 'Finish',
-      value: leader,
-      metric: `${formatNumber(finishing, 2)} R above xR`,
-    });
-  }
-
-  if (Math.abs(awayContact - homeContact) >= 0.1) {
-    const leader = awayContact > homeContact ? awayName : homeName;
-    const contact = awayContact > homeContact ? away : home;
-
-    insights.push({
-      id: 'contact-quality',
-      label: 'Contact',
-      value: leader,
-      metric: `${formatNumber(getNumber(contact.wOBA), 3)} wOBA`,
-    });
-  }
-
-  if (away.expWin != null || home.expWin != null) {
-    const leader = getNumber(away.expWin) >= getNumber(home.expWin) ? awayShort : homeShort;
-    const leaderWin = getNumber(away.expWin) >= getNumber(home.expWin) ? away.expWin : home.expWin;
+  if (outcome?.awayExpectedWinPercentage != null || outcome?.homeExpectedWinPercentage != null) {
+    const awayWin = getNumber(outcome?.awayExpectedWinPercentage);
+    const homeWin = getNumber(outcome?.homeExpectedWinPercentage);
+    const leader = awayWin >= homeWin ? awayShort : homeShort;
+    const leaderWin = awayWin >= homeWin ? outcome?.awayExpectedWinPercentage : outcome?.homeExpectedWinPercentage;
 
     insights.push({
       id: 'expected-win',
-      label: 'xWin',
-      value: leader,
+      label: 'Expected edge',
+      subject: leader,
       metric: formatPercent(leaderWin),
+      tag: 'xWin share',
+    });
+  }
+
+  if (game.isStolenGame) {
+    const awayWinMetric = outcome?.awayExpectedWinPercentage ?? game.teams.away?.expWin;
+    const homeWinMetric = outcome?.homeExpectedWinPercentage ?? game.teams.home?.expWin;
+    const awayWin = getNumber(awayWinMetric);
+    const homeWin = getNumber(homeWinMetric);
+    const expectedLeader = awayWin >= homeWin ? awayShort : homeShort;
+    const expectedWin = awayWin >= homeWin ? awayWinMetric : homeWinMetric;
+
+    insights.push({
+      id: 'stolen-game',
+      label: 'Score vs quality',
+      subject: 'Stolen',
+      metric: `${expectedLeader} ${formatPercent(expectedWin)}`,
+      tag: 'final beat model',
+    });
+  } else if (differentials?.awayQualityAdjustedRunDifferential != null || differentials?.homeQualityAdjustedRunDifferential != null) {
+    const awayDiff = getNumber(differentials?.awayQualityAdjustedRunDifferential);
+    const homeDiff = getNumber(differentials?.homeQualityAdjustedRunDifferential);
+    const leader = awayDiff >= homeDiff ? awayShort : homeShort;
+    const diff = awayDiff >= homeDiff ? differentials?.awayQualityAdjustedRunDifferential : differentials?.homeQualityAdjustedRunDifferential;
+
+    insights.push({
+      id: 'quality-adjusted-edge',
+      label: 'Quality edge',
+      subject: leader,
+      metric: formatSigned(diff, 2),
+      tag: 'QA run diff',
+    });
+  }
+
+  if (shares?.hardHitBalls?.away != null || shares?.hardHitBalls?.home != null) {
+    const awayShare = getNumber(shares?.hardHitBalls?.away);
+    const homeShare = getNumber(shares?.hardHitBalls?.home);
+    const leader = awayShare >= homeShare ? awayShort : homeShort;
+    const share = awayShare >= homeShare ? shares?.hardHitBalls?.away : shares?.hardHitBalls?.home;
+
+    insights.push({
+      id: 'hard-hit-share',
+      label: 'Contact edge',
+      subject: leader,
+      metric: formatPercent(share),
+      tag: 'hard-hit share',
+    });
+  }
+
+  if (outcome?.awayExpectedRuns != null || outcome?.homeExpectedRuns != null) {
+    const awayRuns = getNumber(outcome?.awayExpectedRuns);
+    const homeRuns = getNumber(outcome?.homeExpectedRuns);
+    const leader = awayRuns >= homeRuns ? awayShort : homeShort;
+    const expectedRuns = awayRuns >= homeRuns ? outcome?.awayExpectedRuns : outcome?.homeExpectedRuns;
+
+    insights.push({
+      id: 'expected-runs',
+      label: 'Run creation',
+      subject: leader,
+      metric: formatNumber(expectedRuns, 2),
+      tag: 'expected runs',
     });
   }
 
@@ -120,23 +116,25 @@ export function KeyInsights({ game }: KeyInsightsProps) {
     insights.push({
       id: 'balanced-game',
       label: 'Profile',
-      value: 'Balanced',
-      metric: `${awayShort} ${formatNumber(getNumber(away.expRunsFor), 2)} xR | ${homeShort} ${formatNumber(getNumber(home.expRunsFor), 2)} xR`,
+      subject: 'Even',
+      metric: `${awayShort} / ${homeShort}`,
+      tag: 'no clear edge',
     });
   }
 
   return (
     <section className="key-insights-container" aria-labelledby="key-insights-title">
       <div className="insights-header">
-        <h2 id="key-insights-title">Quick Insights</h2>
-        <span>{insights.length} signals</span>
+        <h2 id="key-insights-title">What the numbers are saying</h2>
+        <span>{Math.min(insights.length, 4)} story points</span>
       </div>
-      <div className="insights-list" id="key-insights-title">
+      <div className="insights-list">
         {insights.slice(0, 4).map((insight) => (
           <article key={insight.id} className="insight-card hologram-bracket">
             <span className="insight-label">{insight.label}</span>
-            <strong>{insight.value}</strong>
+            <strong>{insight.subject}</strong>
             <span className="insight-metric">{insight.metric}</span>
+            <small>{insight.tag}</small>
           </article>
         ))}
       </div>

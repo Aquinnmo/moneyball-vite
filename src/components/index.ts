@@ -8,3 +8,6 @@ export * from './CenteredMetricGraph';
 export * from './OrbitalSpinner';
 export * from './KeyInsights';
 export * from './AdvancedGameAnalysis';
+export * from './GameScoreboard';
+export * from './GameStoryHeader';
+export * from './PlayerDetailTables';
