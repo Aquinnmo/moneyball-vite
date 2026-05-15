@@ -57,7 +57,7 @@
 .team-block {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 18px;
   background: var(--hologram-panel-bg);
   border: 1px solid var(--hologram-cyan-glow);
   padding: 20px;
@@ -120,6 +120,91 @@
   gap: 15px;
 }
 
+.team-story-panel {
+  text-align: left;
+}
+
+.team-story-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.team-story-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px;
+  background: rgba(0, 242, 255, 0.05);
+  border: 1px solid var(--hologram-cyan-glow);
+}
+
+.team-story-card span,
+.team-story-card strong,
+.team-story-card small,
+.team-story-card em,
+.team-evidence-details summary {
+  color: var(--hologram-cyan);
+}
+
+.team-story-card span,
+.team-story-card small,
+.team-evidence-details summary {
+  font-size: 12px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.team-story-card strong {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.team-story-card em {
+  font-size: 12px;
+  font-style: normal;
+  opacity: 0.86;
+  text-transform: uppercase;
+}
+
+.team-evidence-details {
+  padding-top: 6px;
+}
+
+.team-evidence-details summary {
+  cursor: pointer;
+}
+
+.team-evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.team-evidence-grid article {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  background: var(--hologram-panel-bg);
+  border: 1px solid var(--hologram-cyan-glow);
+}
+
+.team-evidence-grid span {
+  color: var(--hologram-cyan);
+  font-size: 11px;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.team-evidence-grid strong {
+  color: rgba(0, 242, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .table-section h4 {
   margin: 0;
   font-family: var(--mono);
@@ -165,4 +250,40 @@
   transition: all 0.2s ease;
   /* Simulating scanlight effect */
   box-shadow: inset 2px 0 0 var(--hologram-cyan);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric-grid article {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  background: var(--hologram-panel-bg);
+  border: 1px solid var(--hologram-cyan-glow);
+  text-align: left;
+}
+
+.metric-grid span {
+  color: var(--hologram-cyan);
+  font-size: 11px;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.metric-grid strong {
+  color: rgba(0, 242, 255, 0.9);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

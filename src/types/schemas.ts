@@ -358,6 +358,140 @@ export const GameTeamSchema = z.object({
     expRunsAgainst: maybe(z.number()),
 });
 
+export const BattingLineSchema = z.object({
+    plateAppearances: maybe(z.number()),
+    atBats: maybe(z.number()),
+    hits: maybe(z.number()),
+    singles: maybe(z.number()),
+    doubles: maybe(z.number()),
+    triples: maybe(z.number()),
+    homeRuns: maybe(z.number()),
+    walks: maybe(z.number()),
+    hitByPitch: maybe(z.number()),
+    strikeouts: maybe(z.number()),
+    sacFlies: maybe(z.number()),
+    totalBases: maybe(z.number()),
+    battingAverage: maybe(z.number()),
+    onBasePercentage: maybe(z.number()),
+    sluggingPercentage: maybe(z.number()),
+    ops: maybe(z.number()),
+    isolatedPower: maybe(z.number()),
+    babip: maybe(z.number()),
+    walkRate: maybe(z.number()),
+    strikeoutRate: maybe(z.number()),
+});
+
+export const ExpectedBattingLineSchema = z.object({
+    xBA: maybe(z.number()),
+    xOBP: maybe(z.number()),
+    xWOBA: maybe(z.number()),
+    xSLG: maybe(z.number()),
+    xOPS: maybe(z.number()),
+    xHits: maybe(z.number()),
+    xTotalBases: maybe(z.number()),
+    xWeightedTimesOnBase: maybe(z.number()),
+    xRunsCreated: maybe(z.number()),
+    xRunsCreatedPerPA: maybe(z.number()),
+    xLinearWeightRuns: maybe(z.number()),
+    qualityAdjustedRuns: maybe(z.number()),
+    contactRunValue: maybe(z.number()),
+    disciplineRunValue: maybe(z.number()),
+    xHomeRuns: maybe(z.number()),
+    hitsAboveExpected: maybe(z.number()),
+    totalBasesAboveExpected: maybe(z.number()),
+    opsAboveExpected: maybe(z.number()),
+    runsCreatedAboveExpected: maybe(z.number()),
+});
+
+export const BattedBallProfileSchema = z.object({
+    ballsInPlay: maybe(z.number()),
+    hardHitBalls: maybe(z.number()),
+    barrels: maybe(z.number()),
+    sweetSpotBalls: maybe(z.number()),
+    avgExitVelo: maybe(z.number()),
+    maxExitVelo: maybe(z.number()),
+    avgLaunchAngle: maybe(z.number()),
+    hardHitRate: maybe(z.number()),
+    barrelRate: maybe(z.number()),
+    sweetSpotRate: maybe(z.number()),
+});
+
+export const PlateDisciplineSchema = z.object({
+    pitches: maybe(z.number()),
+    strikes: maybe(z.number()),
+    balls: maybe(z.number()),
+    swings: maybe(z.number()),
+    whiffs: maybe(z.number()),
+    calledStrikes: maybe(z.number()),
+    calledStrikesPlusWhiffs: maybe(z.number()),
+    firstPitchStrikes: maybe(z.number()),
+    strikeRate: maybe(z.number()),
+    swingRate: maybe(z.number()),
+    whiffRate: maybe(z.number()),
+    cswRate: maybe(z.number()),
+    firstPitchStrikeRate: maybe(z.number()),
+});
+
+export const PitchingLineSchema = z.object({
+    battersFaced: maybe(z.number()),
+    outs: maybe(z.number()),
+    inningsPitched: maybe(z.string()),
+    pitches: maybe(z.number()),
+    strikes: maybe(z.number()),
+    balls: maybe(z.number()),
+    hitsAllowed: maybe(z.number()),
+    walksAllowed: maybe(z.number()),
+    hitByPitchAllowed: maybe(z.number()),
+    strikeouts: maybe(z.number()),
+    homeRunsAllowed: maybe(z.number()),
+    strikeRate: maybe(z.number()),
+    strikeoutRate: maybe(z.number()),
+    walkRate: maybe(z.number()),
+});
+
+export const ExpectedPitchingLineSchema = z.object({
+    xBAAllowed: maybe(z.number()),
+    xOBPAllowed: maybe(z.number()),
+    xWOBAAllowed: maybe(z.number()),
+    xSLGAllowed: maybe(z.number()),
+    xOPSAllowed: maybe(z.number()),
+    xHitsAllowed: maybe(z.number()),
+    xTotalBasesAllowed: maybe(z.number()),
+    xWeightedTimesOnBaseAllowed: maybe(z.number()),
+    expectedRunsAllowed: maybe(z.number()),
+    qualityAdjustedRunsAllowed: maybe(z.number()),
+    xHomeRunsAllowed: maybe(z.number()),
+    contactRunValueAllowed: maybe(z.number()),
+    disciplineRunValueAllowed: maybe(z.number()),
+    runPreventionValue: maybe(z.number()),
+});
+
+export const TeamExpectedOutcomeSchema = z.object({
+    expectedRunsFor: maybe(z.number()),
+    expectedRunsAgainst: maybe(z.number()),
+    qualityAdjustedRunsFor: maybe(z.number()),
+    qualityAdjustedRunsAgainst: maybe(z.number()),
+    expectedRunDifferential: maybe(z.number()),
+    qualityAdjustedRunDifferential: maybe(z.number()),
+    expectedWinPercentage: maybe(z.number()),
+    contactAdvantageRuns: maybe(z.number()),
+    disciplineAdvantageRuns: maybe(z.number()),
+    deservedRunsAboveActual: maybe(z.number()),
+    actualRunsAboveExpected: maybe(z.number()),
+    actualRunsAllowedAboveExpected: maybe(z.number()),
+});
+
+export const ExtendedGameTeamSchema = GameTeamSchema.extend({
+    batting: maybe(BattingLineSchema),
+    expectedBatting: maybe(ExpectedBattingLineSchema),
+    battedBall: maybe(BattedBallProfileSchema),
+    plateDiscipline: maybe(PlateDisciplineSchema),
+    pitching: maybe(PitchingLineSchema),
+    expectedPitching: maybe(ExpectedPitchingLineSchema),
+    contactAllowed: maybe(BattedBallProfileSchema),
+    expectedOutcome: maybe(TeamExpectedOutcomeSchema),
+});
+
 export const BatterSchema = z.object({
     id: z.number().int(),
     fullName: maybe(z.string()),
@@ -381,7 +515,13 @@ export const BatterSchema = z.object({
     avgBatSpeed: maybe(z.number()),
     maxBatSpeed: maybe(z.number()),
     avgExitVelo: maybe(z.number()),
-    onHomeTeam: z.boolean()
+    onHomeTeam: z.boolean(),
+    abCount: maybe(z.number()),
+    wobaCount: maybe(z.number()),
+    batting: maybe(BattingLineSchema),
+    expected: maybe(ExpectedBattingLineSchema),
+    battedBall: maybe(BattedBallProfileSchema),
+    plateDiscipline: maybe(PlateDisciplineSchema),
 });
 
 export const PitcherSchema = z.object({
@@ -407,7 +547,97 @@ export const PitcherSchema = z.object({
     avgLA: maybe(z.number()),
     avgBatSpeed: maybe(z.number()),
     maxBatSpeed: maybe(z.number()),
-    onHomeTeam: z.boolean()
+    onHomeTeam: z.boolean(),
+    pitching: maybe(PitchingLineSchema),
+    expected: maybe(ExpectedPitchingLineSchema),
+    contactAllowed: maybe(BattedBallProfileSchema),
+    plateDiscipline: maybe(PlateDisciplineSchema),
+});
+
+export const SummaryLineScoreInningSchema = z.object({
+    inning: maybe(z.number()),
+    ordinal: maybe(z.string()),
+    homeRuns: maybe(z.number()),
+    awayRuns: maybe(z.number()),
+});
+
+export const SummaryLineScoreSchema = z.object({
+    currentInning: maybe(z.number()),
+    currentInningOrdinal: maybe(z.string()),
+    inningState: maybe(z.string()),
+    isTopInning: maybe(z.boolean()),
+    scheduledInnings: maybe(z.number()),
+    home: maybe(InningStatsSchema),
+    away: maybe(InningStatsSchema),
+    innings: maybe(z.array(SummaryLineScoreInningSchema)),
+});
+
+export const TeamShareSchema = z.object({
+    home: maybe(z.number()),
+    away: maybe(z.number()),
+});
+
+export const GameSharesSchema = z.object({
+    runs: maybe(TeamShareSchema),
+    expectedRuns: maybe(TeamShareSchema),
+    qualityAdjustedRuns: maybe(TeamShareSchema),
+    expectedRunDifferential: maybe(TeamShareSchema),
+    hits: maybe(TeamShareSchema),
+    totalBases: maybe(TeamShareSchema),
+    hardHitBalls: maybe(TeamShareSchema),
+    winProbability: maybe(TeamShareSchema),
+});
+
+export const GameDifferentialsSchema = z.object({
+    homeRunDifferential: maybe(z.number()),
+    awayRunDifferential: maybe(z.number()),
+    homeExpectedRunDifferential: maybe(z.number()),
+    awayExpectedRunDifferential: maybe(z.number()),
+    homeQualityAdjustedRunDifferential: maybe(z.number()),
+    awayQualityAdjustedRunDifferential: maybe(z.number()),
+    homeRunsAboveExpected: maybe(z.number()),
+    awayRunsAboveExpected: maybe(z.number()),
+    homeRunsAllowedAboveExpected: maybe(z.number()),
+    awayRunsAllowedAboveExpected: maybe(z.number()),
+});
+
+export const LeaderEntrySchema = z.object({
+    id: z.number().int(),
+    fullName: z.string(),
+    teamSide: z.enum(['home', 'away']),
+    value: z.number(),
+    label: z.string(),
+});
+
+export const GameLeadersSchema = z.object({
+    topBattersByWOps: maybe(z.array(LeaderEntrySchema)),
+    topBattersByHardHitRate: maybe(z.array(LeaderEntrySchema)),
+    topPitchersByWhiffRate: maybe(z.array(LeaderEntrySchema)),
+    topPitchersByExpectedRunsAllowed: maybe(z.array(LeaderEntrySchema)),
+});
+
+export const GameExpectedOutcomeSchema = z.object({
+    homeExpectedWinPercentage: maybe(z.number()),
+    awayExpectedWinPercentage: maybe(z.number()),
+    homeExpectedRuns: maybe(z.number()),
+    awayExpectedRuns: maybe(z.number()),
+    homeExpectedRunsAllowed: maybe(z.number()),
+    awayExpectedRunsAllowed: maybe(z.number()),
+    homeQualityAdjustedRuns: maybe(z.number()),
+    awayQualityAdjustedRuns: maybe(z.number()),
+    homeQualityAdjustedRunsAllowed: maybe(z.number()),
+    awayQualityAdjustedRunsAllowed: maybe(z.number()),
+    homeDeservedRunDifferential: maybe(z.number()),
+    awayDeservedRunDifferential: maybe(z.number()),
+    modelDescription: maybe(z.string()),
+});
+
+export const GameSummarySchema = z.object({
+    linescore: maybe(SummaryLineScoreSchema),
+    shares: maybe(GameSharesSchema),
+    differentials: maybe(GameDifferentialsSchema),
+    leaders: maybe(GameLeadersSchema),
+    expectedOutcome: maybe(GameExpectedOutcomeSchema),
 });
 
 export const GameDataSchema = z.object({
@@ -416,12 +646,13 @@ export const GameDataSchema = z.object({
     venue: maybe(z.number().int()),
     status: maybe(z.string()),
     teams: z.object({
-        home: maybe(GameTeamSchema),
-        away: maybe(GameTeamSchema)
+        home: maybe(ExtendedGameTeamSchema),
+        away: maybe(ExtendedGameTeamSchema)
     }),
     batters: z.array(BatterSchema),
     pitchers: z.array(PitcherSchema),
-    isStolenGame: z.boolean()
+    isStolenGame: z.boolean(),
+    summary: maybe(GameSummarySchema),
 });
 
 export function processGameData(gameData: unknown): GameData {
@@ -431,4 +662,6 @@ export function processGameData(gameData: unknown): GameData {
 export type GameData = z.infer<typeof GameDataSchema>;
 export type Pitcher = z.infer<typeof PitcherSchema>;
 export type Batter = z.infer<typeof BatterSchema>;
-export type GameTeam = z.infer<typeof GameTeamSchema>;
+export type GameTeam = z.infer<typeof ExtendedGameTeamSchema>;
+export type GameSummary = z.infer<typeof GameSummarySchema>;
+export type LeaderEntry = z.infer<typeof LeaderEntrySchema>;
