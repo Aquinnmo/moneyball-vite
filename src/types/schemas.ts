@@ -611,7 +611,7 @@ export const LeaderEntrySchema = z.object({
 
 export const GameLeadersSchema = z.object({
     topBattersByWOps: maybe(z.array(LeaderEntrySchema)),
-    topBattersByHardHitRate: maybe(z.array(LeaderEntrySchema)),
+    topBattersByXSLG: maybe(z.array(LeaderEntrySchema)),
     topPitchersByWhiffRate: maybe(z.array(LeaderEntrySchema)),
     topPitchersByExpectedRunsAllowed: maybe(z.array(LeaderEntrySchema)),
 });

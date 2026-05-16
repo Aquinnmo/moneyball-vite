@@ -1,5 +1,5 @@
 import type { GameData } from '../types';
-import { formatInteger, formatNumber, formatPercent, getNumber } from './format';
+import { formatInteger, formatNumber, getNumber } from './format';
 import './GameStoryHeader.css';
 
 export interface GameStoryHeaderProps {
@@ -64,10 +64,6 @@ export function GameStoryHeader({ game }: GameStoryHeaderProps) {
         <article>
           <h3>Final Score</h3>
           <p>{actualWinner === 'away' ? awayShort : homeShort} {actualWinner === 'away' ? formatInteger(game.teams.away.runs) : formatInteger(game.teams.home.runs)} - {actualWinner === 'home' ? awayShort : homeShort} {actualWinner === 'home' ? formatInteger(game.teams.away.runs) : formatInteger(game.teams.home.runs)}</p>
-        </article>
-        <article>
-          <h3>Expected Win</h3>
-          <p>{homeShort} {formatPercent(homeWinMetric)} - {awayShort} {formatPercent(awayWinMetric)}</p>
         </article>
         <article>
           <h3>Quality Adjusted Runs</h3>

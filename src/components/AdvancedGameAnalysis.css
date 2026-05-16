@@ -19,9 +19,14 @@
 }
 
 .control-grid {
+  --control-grid-gap: 18px;
+
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, max(220px, calc(33.333% - 12px))), 1fr)
+  );
+  gap: var(--control-grid-gap);
 }
 
 .control-row {
@@ -260,7 +265,6 @@
 }
 
 @media (max-width: 1180px) {
-  .control-grid,
   .differential-grid,
   .analysis-layout {
     grid-template-columns: 1fr 1fr;

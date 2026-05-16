@@ -1,5 +1,5 @@
-import type { GameData, LeaderEntry } from '../types';
-import { formatNumber, formatPercent, formatSigned, getNumber } from './format';
+import type { Batter, GameData, LeaderEntry, Pitcher } from '../types';
+import { formatNumber, getNumber } from './format';
 import './AdvancedGameAnalysis.css';
 
 export interface AdvancedGameAnalysisProps {
@@ -19,6 +19,7 @@ interface LeaderGroup {
   key: string;
   title: string;
   entries: LeaderEntry[];
+  description: string;
 }
 
 function getTeamLabel(game: GameData, side: 'away' | 'home'): string {
@@ -26,23 +27,199 @@ function getTeamLabel(game: GameData, side: 'away' | 'home'): string {
   return team?.abbreviation || team?.name || side.toUpperCase();
 }
 
-function leaderLabel(away: number | null | undefined, home: number | null | undefined, awayName: string, homeName: string): string {
-  const awayValue = getNumber(away);
-  const homeValue = getNumber(home);
+function isFiniteNumber(value: number | null | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
 
-  if (awayValue === homeValue) {
-    return 'Even';
+function hasMeaningfulShare(row: StoryShare): boolean {
+  return getNumber(row.away) > 0 || getNumber(row.home) > 0;
+}
+
+function playerName(player: Batter | Pitcher): string {
+  return player.fullName || `Player ${player.id}`;
+}
+
+function teamSide(onHomeTeam: boolean): LeaderEntry['teamSide'] {
+  return onHomeTeam ? 'home' : 'away';
+}
+
+function getBatterXslg(batter: Batter): number | null {
+  const xslg = batter.expected?.xSLG ?? batter.xSLG;
+  return isFiniteNumber(xslg) ? xslg : null;
+}
+
+function getBatterXba(batter: Batter): number | null {
+  const xba = batter.expected?.xBA ?? batter.xBa;
+  return isFiniteNumber(xba) ? xba : null;
+}
+
+function getBatterXrc(batter: Batter): number | null {
+  const xrc = batter.expected?.xRunsCreated;
+  return isFiniteNumber(xrc) ? xrc : null;
+}
+
+function getBatterPlateAppearances(batter: Batter): number | null {
+  const plateAppearances = batter.batting?.plateAppearances ?? batter.nPA;
+  return isFiniteNumber(plateAppearances) && plateAppearances > 0 ? plateAppearances : null;
+}
+
+function getBatterXrcPerPa(batter: Batter): number | null {
+  const xrcPerPa = batter.expected?.xRunsCreatedPerPA;
+
+  if (isFiniteNumber(xrcPerPa)) {
+    return xrcPerPa;
   }
 
-  return awayValue > homeValue ? awayName : homeName;
+  const xrc = getBatterXrc(batter);
+  const plateAppearances = getBatterPlateAppearances(batter);
+
+  if (xrc == null || plateAppearances == null) {
+    return null;
+  }
+
+  return xrc / plateAppearances;
 }
 
-function leaderValue(away: number | null | undefined, home: number | null | undefined): number | null | undefined {
-  return getNumber(away) >= getNumber(home) ? away : home;
+function getPitcherXra(pitcher: Pitcher): number | null {
+  const xra = pitcher.expected?.expectedRunsAllowed ?? pitcher.expRunsAgainst;
+  return isFiniteNumber(xra) ? xra : null;
 }
 
-function getWidth(value: number | null | undefined): number {
-  return typeof value === 'number' && Number.isFinite(value) ? Math.max(value * 100, 4) : 4;
+function getPitcherXwobaAllowed(pitcher: Pitcher): number | null {
+  const xwobaAllowed = pitcher.expected?.xWOBAAllowed ?? pitcher.wOBA;
+  return isFiniteNumber(xwobaAllowed) ? xwobaAllowed : null;
+}
+
+function getPitcherOuts(pitcher: Pitcher): number | null {
+  const outs = pitcher.pitching?.outs ?? pitcher.outs;
+  return isFiniteNumber(outs) && outs > 0 ? outs : null;
+}
+
+function getBatterXslgLeaders(batters: Batter[]): LeaderEntry[] {
+  return batters
+    .map((batter) => {
+      const value = getBatterXslg(batter);
+
+      if (value == null) {
+        return null;
+      }
+
+      return {
+        id: batter.id,
+        fullName: playerName(batter),
+        teamSide: teamSide(batter.onHomeTeam),
+        value,
+        label: 'xSLG',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => b.value - a.value);
+}
+
+function getBatterXrcLeaders(batters: Batter[]): LeaderEntry[] {
+  return batters
+    .map((batter) => {
+      const value = getBatterXrc(batter);
+
+      if (value == null) {
+        return null;
+      }
+
+      return {
+        id: batter.id,
+        fullName: playerName(batter),
+        teamSide: teamSide(batter.onHomeTeam),
+        value,
+        label: 'xRC',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => b.value - a.value);
+}
+
+function getBatterXrcPerPaLeaders(batters: Batter[]): LeaderEntry[] {
+  return batters
+    .map((batter) => {
+      const value = getBatterXrcPerPa(batter);
+
+      if (value == null) {
+        return null;
+      }
+
+      return {
+        id: batter.id,
+        fullName: playerName(batter),
+        teamSide: teamSide(batter.onHomeTeam),
+        value,
+        label: 'xRC / PA',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => b.value - a.value);
+}
+
+function getBatterXbaLeaders(batters: Batter[]): LeaderEntry[] {
+  return batters
+    .map((batter) => {
+      const value = getBatterXba(batter);
+
+      if (value == null) {
+        return null;
+      }
+
+      return {
+        id: batter.id,
+        fullName: playerName(batter),
+        teamSide: teamSide(batter.onHomeTeam),
+        value,
+        label: 'xBA',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => b.value - a.value);
+}
+
+function getPitcherXwobaAllowedLeaders(pitchers: Pitcher[]): LeaderEntry[] {
+  return pitchers
+    .map((pitcher) => {
+      const value = getPitcherXwobaAllowed(pitcher);
+
+      if (value == null) {
+        return null;
+      }
+
+      return {
+        id: pitcher.id,
+        fullName: playerName(pitcher),
+        teamSide: teamSide(pitcher.onHomeTeam),
+        value,
+        label: 'xWOBA allowed',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => a.value - b.value);
+}
+
+function getPitcherXraPerOutLeaders(pitchers: Pitcher[], sortDirection: 'best' | 'worst'): LeaderEntry[] {
+  return pitchers
+    .map((pitcher) => {
+      const xra = getPitcherXra(pitcher);
+      const outs = getPitcherOuts(pitcher);
+
+      if (xra == null || outs == null) {
+        return null;
+      }
+
+      return {
+        id: pitcher.id,
+        fullName: playerName(pitcher),
+        teamSide: teamSide(pitcher.onHomeTeam),
+        value: xra / outs,
+        label: 'xRA / out',
+      };
+    })
+    .filter((entry): entry is LeaderEntry => entry != null)
+    .sort((a, b) => (sortDirection === 'best' ? a.value - b.value : b.value - a.value));
 }
 
 /**
@@ -62,67 +239,80 @@ export function AdvancedGameAnalysis({ game }: AdvancedGameAnalysisProps) {
   const awayName = getTeamLabel(game, 'away');
   const homeName = getTeamLabel(game, 'home');
   const shares = summary.shares;
-  const differentials = summary.differentials;
   const leaders = summary.leaders;
+  const batterXslgLeaders = leaders?.topBattersByXSLG?.length
+    ? leaders.topBattersByXSLG
+    : getBatterXslgLeaders(game.batters);
+  const batterXrcLeaders = getBatterXrcLeaders(game.batters);
+  const batterXrcPerPaLeaders = getBatterXrcPerPaLeaders(game.batters);
+  const batterXbaLeaders = getBatterXbaLeaders(game.batters);
+  const pitcherXwobaAllowedLeaders = getPitcherXwobaAllowedLeaders(game.pitchers);
 
   const storyShares: StoryShare[] = [
     {
-      key: 'expected-runs',
-      title: 'Expected chances',
-      statLabel: 'expected run share',
-      away: shares?.expectedRuns?.away,
-      home: shares?.expectedRuns?.home,
-    },
-    {
-      key: 'quality-adjusted-runs',
-      title: 'Quality edge',
-      statLabel: 'QA run share',
-      away: shares?.qualityAdjustedRuns?.away,
-      home: shares?.qualityAdjustedRuns?.home,
-    },
-    {
-      key: 'hard-hit-balls',
-      title: 'Contact edge',
-      statLabel: 'hard-hit share',
-      away: shares?.hardHitBalls?.away,
-      home: shares?.hardHitBalls?.home,
+      key: 'expected-run-differential',
+      title: 'Expected run edge',
+      statLabel: 'expected edge share',
+      away: shares?.expectedRunDifferential?.away,
+      home: shares?.expectedRunDifferential?.home,
     },
     {
       key: 'total-bases',
-      title: 'Damage',
-      statLabel: 'total-base share',
+      title: 'Total base share',
+      statLabel: 'total base share',
       away: shares?.totalBases?.away,
       home: shares?.totalBases?.home,
     },
-    {
-      key: 'win-probability',
-      title: 'Expected result',
-      statLabel: 'xWin share',
-      away: shares?.winProbability?.away,
-      home: shares?.winProbability?.home,
-    },
-  ].filter((row) => row.away != null || row.home != null);
+  ].filter(hasMeaningfulShare);
 
   const leaderGroups: LeaderGroup[] = [
     {
-      key: 'wops',
-      title: 'Offense value',
-      entries: leaders?.topBattersByWOps ?? [],
+      key: 'xrc',
+      title: 'Offensive value',
+      entries: batterXrcLeaders,
+      description: 'expected Runs Created',
     },
     {
-      key: 'hard-hit',
-      title: 'Loud contact',
-      entries: leaders?.topBattersByHardHitRate ?? [],
+      key: 'xrc-per-pa',
+      title: 'Offensive Efficiency',
+      entries: batterXrcPerPaLeaders,
+      description: 'Runs per PA',
     },
     {
-      key: 'whiff',
-      title: 'Missed bats',
-      entries: leaders?.topPitchersByWhiffRate ?? [],
+      key: 'xba',
+      title: 'Expected contact',
+      entries: batterXbaLeaders,
+      description: 'xBA',
+    },
+    {
+      key: 'xslg',
+      title: 'Expected power',
+      entries: batterXslgLeaders,
+      description: 'xSLG',
     },
     {
       key: 'xra',
-      title: 'Run prevention',
-      entries: leaders?.topPitchersByExpectedRunsAllowed ?? [],
+      title: 'Pitching Effiency',
+      entries: getPitcherXraPerOutLeaders(game.pitchers, 'best'),
+      description: 'xRA / out',
+    },
+    {
+      key: 'worst-xra',
+      title: 'Worst Pitching Efficiency',
+      entries: getPitcherXraPerOutLeaders(game.pitchers, 'worst'),
+      description: 'xRA / out',
+    },
+    {
+      key: 'xwoba-allowed',
+      title: 'Contact allowed',
+      entries: pitcherXwobaAllowedLeaders,
+      description: 'xWOBA against',
+    },
+    {
+      key: 'whiff',
+      title: 'Strikeout potential',
+      entries: leaders?.topPitchersByWhiffRate ?? [],
+      description: 'Whiff Rate',
     },
   ].filter((group) => group.entries.length > 0);
 
@@ -133,35 +323,8 @@ export function AdvancedGameAnalysis({ game }: AdvancedGameAnalysisProps) {
   return (
     <section className="advanced-analysis" aria-labelledby="advanced-analysis-title">
       <div className="analysis-heading">
-        <span>Evidence</span>
-        <h2 className="section-title" id="advanced-analysis-title">Why the model sees it this way</h2>
+        <h2 className="section-title" id="advanced-analysis-title">The Leaders</h2>
       </div>
-
-      {storyShares.length > 0 && (
-        <div className="control-grid">
-          {storyShares.map((row) => (
-            <article className="control-row hologram-bracket" key={row.key}>
-              <div className="control-row-header">
-                <span>{row.title}</span>
-                <strong>{leaderLabel(row.away, row.home, awayName, homeName)}</strong>
-              </div>
-              <strong className="control-stat">{formatPercent(leaderValue(row.away, row.home))} {row.statLabel}</strong>
-              <div className="split-meter" aria-label={`${row.title}: ${awayName} ${formatPercent(row.away)}, ${homeName} ${formatPercent(row.home)}`}>
-                <div className="split-meter-away" style={{ width: `${getWidth(row.away)}%` }}>
-                  <span>{formatPercent(row.away)}</span>
-                </div>
-                <div className="split-meter-home" style={{ width: `${getWidth(row.home)}%` }}>
-                  <span>{formatPercent(row.home)}</span>
-                </div>
-              </div>
-              <div className="control-labels">
-                <span>{awayName}</span>
-                <span>{homeName}</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
 
       {leaderGroups.length > 0 && (
         <div className="analysis-layout">
@@ -173,41 +336,13 @@ export function AdvancedGameAnalysis({ game }: AdvancedGameAnalysisProps) {
                   <li key={`${group.key}-${entry.id}`}>
                     <span>{entry.fullName}</span>
                     <strong>{entry.teamSide === 'home' ? homeName : awayName}</strong>
-                    <small>{formatNumber(entry.value, 3)} {entry.label}</small>
+                    <small>{formatNumber(entry.value, 3)} {group.description}</small>
                   </li>
                 ))}
               </ol>
             </article>
           ))}
         </div>
-      )}
-
-      {differentials && (
-        <details className="story-details hologram-bracket">
-          <summary>Show the run differential evidence</summary>
-          <div className="differential-grid">
-            <article className="differential-card">
-              <span>Actual Run Differential</span>
-              <div><strong>{formatSigned(differentials.awayRunDifferential)}</strong><strong>{formatSigned(differentials.homeRunDifferential)}</strong></div>
-              <small>{awayName} / {homeName}</small>
-            </article>
-            <article className="differential-card">
-              <span>Expected Run Differential</span>
-              <div><strong>{formatSigned(differentials.awayExpectedRunDifferential)}</strong><strong>{formatSigned(differentials.homeExpectedRunDifferential)}</strong></div>
-              <small>{awayName} / {homeName}</small>
-            </article>
-            <article className="differential-card">
-              <span>Quality Adj Run Differential</span>
-              <div><strong>{formatSigned(differentials.awayQualityAdjustedRunDifferential)}</strong><strong>{formatSigned(differentials.homeQualityAdjustedRunDifferential)}</strong></div>
-              <small>{awayName} / {homeName}</small>
-            </article>
-            <article className="differential-card">
-              <span>Runs Above Expected</span>
-              <div><strong>{formatSigned(differentials.awayRunsAboveExpected)}</strong><strong>{formatSigned(differentials.homeRunsAboveExpected)}</strong></div>
-              <small>{awayName} / {homeName}</small>
-            </article>
-          </div>
-        </details>
       )}
     </section>
   );

@@ -37,21 +37,6 @@ export function KeyInsights({ game }: KeyInsightsProps) {
   const shares = game.summary?.shares;
   const insights: Insight[] = [];
 
-  if (outcome?.awayExpectedWinPercentage != null || outcome?.homeExpectedWinPercentage != null) {
-    const awayWin = getNumber(outcome?.awayExpectedWinPercentage);
-    const homeWin = getNumber(outcome?.homeExpectedWinPercentage);
-    const leader = awayWin >= homeWin ? awayShort : homeShort;
-    const leaderWin = awayWin >= homeWin ? outcome?.awayExpectedWinPercentage : outcome?.homeExpectedWinPercentage;
-
-    insights.push({
-      id: 'expected-win',
-      label: 'Expected edge',
-      subject: leader,
-      metric: formatPercent(leaderWin),
-      tag: 'xWin share',
-    });
-  }
-
   if (game.isStolenGame) {
     const awayWinMetric = outcome?.awayExpectedWinPercentage ?? game.teams.away?.expWin;
     const homeWinMetric = outcome?.homeExpectedWinPercentage ?? game.teams.home?.expWin;
@@ -78,7 +63,7 @@ export function KeyInsights({ game }: KeyInsightsProps) {
       label: 'Quality edge',
       subject: leader,
       metric: formatSigned(diff, 2),
-      tag: 'QA run diff',
+      tag: 'Quality Adjusted run differential',
     });
   }
 
@@ -90,7 +75,7 @@ export function KeyInsights({ game }: KeyInsightsProps) {
 
     insights.push({
       id: 'hard-hit-share',
-      label: 'Contact edge',
+      label: 'Power edge',
       subject: leader,
       metric: formatPercent(share),
       tag: 'hard-hit share',
@@ -118,18 +103,17 @@ export function KeyInsights({ game }: KeyInsightsProps) {
       label: 'Profile',
       subject: 'Even',
       metric: `${awayShort} / ${homeShort}`,
-      tag: 'no clear edge',
+      tag: 'no clear edge for either team',
     });
   }
 
   return (
     <section className="key-insights-container" aria-labelledby="key-insights-title">
       <div className="insights-header">
-        <h2 id="key-insights-title">What the numbers are saying</h2>
-        <span>{Math.min(insights.length, 4)} story points</span>
+        <h2 id="key-insights-title">Key Insights</h2>
       </div>
       <div className="insights-list">
-        {insights.slice(0, 4).map((insight) => (
+        {insights.map((insight) => (
           <article key={insight.id} className="insight-card hologram-bracket">
             <span className="insight-label">{insight.label}</span>
             <strong>{insight.subject}</strong>
