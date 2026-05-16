@@ -1,5 +1,5 @@
 import type { Batter, Pitcher } from '../types';
-import { formatInteger, formatNumber, formatPercent, formatSigned, getNumber } from './format';
+import { formatNumber, formatPercent, getNumber } from './format';
 import './PlayerDetailTables.css';
 
 export interface BatterDetailTableProps {
@@ -26,6 +26,51 @@ function playerName(player: Batter | Pitcher): string {
 
 function teamSide(onHomeTeam: boolean): string {
   return onHomeTeam ? 'Home' : 'Away';
+}
+
+function isFiniteNumber(value: number | null | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function getBatterPlateAppearances(batter: Batter): number | null {
+  const plateAppearances = batter.batting?.plateAppearances ?? batter.nPA;
+  return isFiniteNumber(plateAppearances) && plateAppearances > 0 ? plateAppearances : null;
+}
+
+function getBatterXrcPerPa(batter: Batter): number | null {
+  const xrcPerPa = batter.expected?.xRunsCreatedPerPA;
+
+  if (isFiniteNumber(xrcPerPa)) {
+    return xrcPerPa;
+  }
+
+  const xrc = batter.expected?.xRunsCreated;
+  const plateAppearances = getBatterPlateAppearances(batter);
+
+  if (!isFiniteNumber(xrc) || plateAppearances == null) {
+    return null;
+  }
+
+  return xrc / plateAppearances;
+}
+
+function getPitcherOuts(pitcher: Pitcher): number | null {
+  const outs = pitcher.pitching?.outs ?? pitcher.outs;
+  return isFiniteNumber(outs) && outs > 0 ? outs : null;
+}
+
+function getPitcherRunsAgainst(pitcher: Pitcher): number | null {
+  return isFiniteNumber(pitcher.runsAgainst) ? pitcher.runsAgainst : null;
+}
+
+function getPitcherExpectedRunsAgainst(pitcher: Pitcher): number | null {
+  const expectedRunsAgainst = pitcher.expected?.expectedRunsAllowed ?? pitcher.expRunsAgainst;
+  return isFiniteNumber(expectedRunsAgainst) ? expectedRunsAgainst : null;
+}
+
+function getPitcherXwobaAllowed(pitcher: Pitcher): number | null {
+  const xwobaAllowed = pitcher.expected?.xWOBAAllowed ?? pitcher.wOBA;
+  return isFiniteNumber(xwobaAllowed) ? xwobaAllowed : null;
 }
 
 function topBy<T>(players: T[], score: (player: T) => number): T | undefined {
@@ -66,81 +111,52 @@ export function BatterDetailTable({ batters }: BatterDetailTableProps) {
   }
 
   const activeBatters = batters.filter((batter) => getNumber(batter.nPA) > 0 || getNumber(batter.batting?.plateAppearances) > 0);
-  const bestBat = topBy(activeBatters, (batter) => getNumber(batter.wOPS, getNumber(batter.expected?.xOPS)));
-  const loudestContact = topBy(activeBatters, (batter) => getNumber(batter.battedBall?.hardHitRate));
+  const xrcPerPaBatters = activeBatters.filter((batter) => getBatterXrcPerPa(batter) != null);
+  const mostEfficientBatter = topBy(xrcPerPaBatters, (batter) => getNumber(getBatterXrcPerPa(batter)));
+  const batSpeedBatters = activeBatters.filter((batter) => isFiniteNumber(batter.avgBatSpeed));
+  const fastestSwing = topBy(batSpeedBatters, (batter) => getNumber(batter.avgBatSpeed));
   const mostDeservedProduction = topBy(activeBatters, (batter) => getNumber(batter.expected?.xRunsCreated));
-  const bestApproach = topBy(activeBatters, (batter) => getNumber(batter.plateDiscipline?.cswRate));
+  const approachBatters = activeBatters.filter((batter) => isFiniteNumber(batter.plateDiscipline?.cswRate));
+  const bestApproach = [...approachBatters]
+    .sort((a, b) => getNumber(b.plateDiscipline?.swings) - getNumber(a.plateDiscipline?.swings))
+    .sort((a, b) => getNumber(getBatterPlateAppearances(b)) - getNumber(getBatterPlateAppearances(a)))
+    .sort((a, b) => getNumber(a.plateDiscipline?.cswRate) - getNumber(b.plateDiscipline?.cswRate))[0];
 
   const stories: PlayerStory[] = [
-    bestBat && {
-      role: 'Best bat',
-      name: playerName(bestBat),
-      team: teamSide(bestBat.onHomeTeam),
-      metric: formatNumber(bestBat.wOPS ?? bestBat.expected?.xOPS, 3),
-      tag: 'wOPS/xOPS',
-    },
-    loudestContact && {
-      role: 'Loudest contact',
-      name: playerName(loudestContact),
-      team: teamSide(loudestContact.onHomeTeam),
-      metric: formatPercent(loudestContact.battedBall?.hardHitRate),
-      tag: 'hard-hit rate',
-    },
     mostDeservedProduction && {
-      role: 'Run creation',
+      role: 'Star Batter',
       name: playerName(mostDeservedProduction),
       team: teamSide(mostDeservedProduction.onHomeTeam),
       metric: formatNumber(mostDeservedProduction.expected?.xRunsCreated, 2),
       tag: 'xRuns created',
     },
+    mostEfficientBatter && {
+      role: 'Most Efficient Batter',
+      name: playerName(mostEfficientBatter),
+      team: teamSide(mostEfficientBatter.onHomeTeam),
+      metric: formatNumber(getBatterXrcPerPa(mostEfficientBatter), 3),
+      tag: 'xRC / PA',
+    },
+    fastestSwing && {
+      role: 'Swinging for the fences',
+      name: playerName(fastestSwing),
+      team: teamSide(fastestSwing.onHomeTeam),
+      metric: `${formatNumber(fastestSwing.avgBatSpeed, 1)} mph`,
+      tag: 'avg bat speed',
+    },
     bestApproach && {
-      role: 'Approach',
+      role: 'Most Disciplined',
       name: playerName(bestApproach),
       team: teamSide(bestApproach.onHomeTeam),
       metric: formatPercent(bestApproach.plateDiscipline?.cswRate),
-      tag: 'CSW rate',
+      tag: 'Called Strike plus Whiff rate',
     },
   ].filter((story): story is PlayerStory => Boolean(story));
 
-  const sortedBatters = [...activeBatters].sort((a, b) => getNumber(b.wOPS, getNumber(b.expected?.xOPS)) - getNumber(a.wOPS, getNumber(a.expected?.xOPS)));
-
   return (
     <section className="player-detail-panel hologram-bracket" aria-labelledby="batter-detail-title">
-      <h3 id="batter-detail-title">Hitters who explain the game</h3>
+      <h3 id="batter-detail-title">Hitter Standouts</h3>
       <StoryCards stories={stories} />
-      <details className="player-evidence-details">
-        <summary>Show hitter evidence table</summary>
-        <div className="player-detail-table-wrap">
-          <table className="player-detail-table">
-            <thead>
-              <tr>
-                <th>Batter</th>
-                <th>Side</th>
-                <th>PA</th>
-                <th>OPS</th>
-                <th>xOPS</th>
-                <th>xRC</th>
-                <th>Hard Hit%</th>
-                <th>Whiff%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedBatters.map((batter) => (
-                <tr key={batter.id}>
-                  <td>{playerName(batter)}</td>
-                  <td>{teamSide(batter.onHomeTeam)}</td>
-                  <td>{formatInteger(batter.batting?.plateAppearances ?? batter.nPA)}</td>
-                  <td>{formatNumber(batter.batting?.ops ?? batter.wOPS, 3)}</td>
-                  <td>{formatNumber(batter.expected?.xOPS ?? batter.wOPS, 3)}</td>
-                  <td>{formatNumber(batter.expected?.xRunsCreated, 2)}</td>
-                  <td>{formatPercent(batter.battedBall?.hardHitRate)}</td>
-                  <td>{formatPercent(batter.plateDiscipline?.whiffRate)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </details>
     </section>
   );
 }
@@ -159,19 +175,17 @@ export function PitcherDetailTable({ pitchers }: PitcherDetailTableProps) {
   }
 
   const activePitchers = pitchers.filter((pitcher) => getNumber(pitcher.battersFaced) > 0 || getNumber(pitcher.pitching?.battersFaced) > 0);
-  const bestPrevention = topBy(activePitchers, (pitcher) => getNumber(pitcher.expected?.runPreventionValue));
-  const cleanestExpectedLine = lowestBy(activePitchers, (pitcher) => getNumber(pitcher.expected?.expectedRunsAllowed, getNumber(pitcher.expRunsAgainst)));
+  const inningEaterPitchers = activePitchers.filter((pitcher) => getPitcherOuts(pitcher) != null);
+  const inningEater = [...inningEaterPitchers]
+    .sort((a, b) => getNumber(getPitcherExpectedRunsAgainst(a)) - getNumber(getPitcherExpectedRunsAgainst(b)))
+    .sort((a, b) => getNumber(getPitcherRunsAgainst(a)) - getNumber(getPitcherRunsAgainst(b)))
+    .sort((a, b) => getNumber(getPitcherOuts(b)) - getNumber(getPitcherOuts(a)))[0];
+  const cleanestExpectedLine = lowestBy(activePitchers, (pitcher) => getNumber(getPitcherExpectedRunsAgainst(pitcher)));
   const commandArm = topBy(activePitchers, (pitcher) => getNumber(pitcher.plateDiscipline?.cswRate));
-  const contactManager = lowestBy(activePitchers, (pitcher) => getNumber(pitcher.contactAllowed?.hardHitRate, 1));
+  const contactManagerPitchers = activePitchers.filter((pitcher) => getPitcherXwobaAllowed(pitcher) != null);
+  const contactManager = lowestBy(contactManagerPitchers, (pitcher) => getNumber(getPitcherXwobaAllowed(pitcher)));
 
   const stories: PlayerStory[] = [
-    bestPrevention && {
-      role: 'Run prevention',
-      name: playerName(bestPrevention),
-      team: teamSide(bestPrevention.onHomeTeam),
-      metric: formatSigned(bestPrevention.expected?.runPreventionValue, 2),
-      tag: 'run prevention value',
-    },
     cleanestExpectedLine && {
       role: 'Cleanest line',
       name: playerName(cleanestExpectedLine),
@@ -179,63 +193,33 @@ export function PitcherDetailTable({ pitchers }: PitcherDetailTableProps) {
       metric: formatNumber(cleanestExpectedLine.expected?.expectedRunsAllowed ?? cleanestExpectedLine.expRunsAgainst, 2),
       tag: 'expected runs allowed',
     },
+    contactManager && {
+      role: 'Contact manager',
+      name: playerName(contactManager),
+      team: teamSide(contactManager.onHomeTeam),
+      metric: formatNumber(getPitcherXwobaAllowed(contactManager), 3),
+      tag: 'xWOBA allowed',
+    },
     commandArm && {
-      role: 'Command',
+      role: 'Strikeout Artist',
       name: playerName(commandArm),
       team: teamSide(commandArm.onHomeTeam),
       metric: formatPercent(commandArm.plateDiscipline?.cswRate),
       tag: 'CSW rate',
     },
-    contactManager && {
-      role: 'Contact manager',
-      name: playerName(contactManager),
-      team: teamSide(contactManager.onHomeTeam),
-      metric: formatPercent(contactManager.contactAllowed?.hardHitRate),
-      tag: 'hard-hit allowed',
+    inningEater && {
+      role: 'Inning eater',
+      name: playerName(inningEater),
+      team: teamSide(inningEater.onHomeTeam),
+      metric: formatNumber(getPitcherOuts(inningEater), 0),
+      tag: 'outs recorded',
     },
   ].filter((story): story is PlayerStory => Boolean(story));
 
-  const sortedPitchers = [...activePitchers].sort(
-    (a, b) => getNumber(a.expected?.expectedRunsAllowed, getNumber(a.expRunsAgainst)) - getNumber(b.expected?.expectedRunsAllowed, getNumber(b.expRunsAgainst)),
-  );
-
   return (
     <section className="player-detail-panel hologram-bracket" aria-labelledby="pitcher-detail-title">
-      <h3 id="pitcher-detail-title">Pitchers who explain the game</h3>
+      <h3 id="pitcher-detail-title">Pitcher Standouts</h3>
       <StoryCards stories={stories} />
-      <details className="player-evidence-details">
-        <summary>Show pitcher evidence table</summary>
-        <div className="player-detail-table-wrap">
-          <table className="player-detail-table">
-            <thead>
-              <tr>
-                <th>Pitcher</th>
-                <th>Side</th>
-                <th>BF</th>
-                <th>IP</th>
-                <th>K%</th>
-                <th>xRA</th>
-                <th>Run Prev</th>
-                <th>Hard Hit%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedPitchers.map((pitcher) => (
-                <tr key={pitcher.id}>
-                  <td>{playerName(pitcher)}</td>
-                  <td>{teamSide(pitcher.onHomeTeam)}</td>
-                  <td>{formatInteger(pitcher.pitching?.battersFaced ?? pitcher.battersFaced)}</td>
-                  <td>{pitcher.pitching?.inningsPitched ?? '--'}</td>
-                  <td>{formatPercent(pitcher.pitching?.strikeoutRate)}</td>
-                  <td>{formatNumber(pitcher.expected?.expectedRunsAllowed ?? pitcher.expRunsAgainst, 2)}</td>
-                  <td>{formatSigned(pitcher.expected?.runPreventionValue, 2)}</td>
-                  <td>{formatPercent(pitcher.contactAllowed?.hardHitRate)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </details>
     </section>
   );
 }

@@ -63,7 +63,7 @@ export function Game() {
             <TeamTable team={game?.teams.away} opponent={game?.teams.home} />
             <TeamTable team={game?.teams.home} opponent={game?.teams.away} />
           </div>
-          <h2 className='section-title' id="batters">Player Stories</h2>
+          <h2 className='section-title' id="batters">Key Players</h2>
           <BatterDetailTable batters={game?.batters} />
           <PitcherDetailTable pitchers={game?.pitchers} />
         </>

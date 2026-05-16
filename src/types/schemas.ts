@@ -541,6 +541,7 @@ export const PitcherSchema = z.object({
     expBases: maybe(z.number()),
     battersFaced: maybe(z.number().int()),
     outs: maybe(z.number().int()),
+    runsAgainst: maybe(z.number()),
     expRunsAgainst: maybe(z.number()),
     maxExitVelo: maybe(z.number()),
     avgExitVelo: maybe(z.number()),
