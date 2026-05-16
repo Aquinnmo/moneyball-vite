@@ -3,7 +3,7 @@ import type { Schedule } from './types'
 import { Link } from 'react-router';
 import { getTodayGames } from './api'
 import './App.css'
-import { OrbitalSpinner } from './components';
+import { BaseballDiamondSpinner } from './components';
 
 function formatDateYMD(date: Date) {
   const yyyy = date.getFullYear();
@@ -88,7 +88,7 @@ export function App() {
       </div>
 
       {loading ? (
-        <OrbitalSpinner message="Finding games..."/>
+        <BaseballDiamondSpinner message="Finding games..."/>
       ) : (
         <div>
           <h2>Games for {currentDate}:</h2>

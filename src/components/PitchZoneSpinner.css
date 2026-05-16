@@ -1,0 +1,145 @@
+/* Pitch-zone loading spinner (Hologram Theme) */
+
+:root {
+  --pz-stage-width: 92px;
+  --pz-stage-height: 108px;
+  --pz-zone-width: 64px;
+  --pz-zone-height: 84px;
+  --pz-flash-size: 14px;
+  --pz-gap: 12px;
+
+  --pz-overlay-bg: var(--hologram-bg);
+  --pz-label-color: var(--hologram-cyan);
+  --pz-label-size: 1rem;
+  --pz-label-font: var(--mono);
+}
+
+.pz-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pz-gap);
+  pointer-events: none;
+  text-shadow: 0 0 10px var(--hologram-cyan-glow);
+}
+
+.pz-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--pz-overlay-bg);
+  pointer-events: all;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 242, 255, 0.05) 2px,
+    rgba(0, 242, 255, 0.05) 4px
+  );
+}
+
+.pz-stage {
+  position: relative;
+  width: var(--pz-stage-width);
+  height: var(--pz-stage-height);
+  flex-shrink: 0;
+  animation: hologram-flicker 3s infinite alternate;
+}
+
+.pz-stage::before {
+  content: "";
+  position: absolute;
+  inset: 8px 0 0;
+  background: radial-gradient(circle, rgba(0, 242, 255, 0.16), transparent 64%);
+  filter: blur(2px);
+}
+
+.pz-zone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--pz-zone-width);
+  height: var(--pz-zone-height);
+  border: 1px solid var(--hologram-cyan);
+  background:
+    linear-gradient(90deg, transparent 32.8%, var(--hologram-grid) 33%, var(--hologram-grid) 34%, transparent 34.2%),
+    linear-gradient(90deg, transparent 65.8%, var(--hologram-grid) 66%, var(--hologram-grid) 67%, transparent 67.2%),
+    linear-gradient(0deg, transparent 32.8%, var(--hologram-grid) 33%, var(--hologram-grid) 34%, transparent 34.2%),
+    linear-gradient(0deg, transparent 65.8%, var(--hologram-grid) 66%, var(--hologram-grid) 67%, transparent 67.2%);
+  box-shadow:
+    0 0 14px var(--hologram-cyan-glow),
+    inset 0 0 16px rgba(0, 242, 255, 0.12);
+  transform: translate(-50%, -50%);
+}
+
+.pz-zone::before,
+.pz-zone::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 10px;
+  border: 1px solid var(--hologram-grid);
+  transform: translateX(-50%);
+}
+
+.pz-zone::before {
+  top: -18px;
+  border-bottom: 0;
+}
+
+.pz-zone::after {
+  bottom: -18px;
+  border-top: 0;
+}
+
+.pz-flash {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  top: var(--pz-flash-y);
+  left: var(--pz-flash-x);
+  width: var(--pz-flash-size);
+  height: var(--pz-flash-size);
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    #ffffff 24%,
+    rgba(0, 242, 255, 0.95) 45%,
+    rgba(0, 242, 255, 0.42) 66%,
+    transparent 78%
+  );
+  box-shadow:
+    0 0 10px #ffffff,
+    0 0 18px var(--hologram-cyan),
+    0 0 30px var(--hologram-cyan-glow);
+  opacity: 0;
+  animation: pz-bright-flash 0.68s ease-out both;
+}
+
+@keyframes pz-bright-flash {
+  0% {
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  40% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.pz-label {
+  font-family: var(--pz-label-font);
+  color: var(--pz-label-color);
+  font-size: var(--pz-label-size);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}

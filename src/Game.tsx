@@ -3,7 +3,7 @@ import './Game.css'
 import { useParams } from 'react-router';
 import type { GameData } from './types'
 import { 
-  OrbitalSpinner,
+  PitchZoneSpinner,
   TeamTable, 
   WinOMeter, 
   KeyInsights,
@@ -46,7 +46,7 @@ export function Game() {
   return (
     <div className="game-container" id='game'>
       {loading ? (
-        <OrbitalSpinner message="Crunching game data..." />
+        <PitchZoneSpinner message="Crunching game data..." />
       ) : (
         <>
           <div className="game-header">

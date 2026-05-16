@@ -169,6 +169,16 @@ button:hover {
   box-shadow: 0 0 15px var(--hologram-cyan), inset 0 0 15px var(--hologram-cyan-glow);
 }
 
+button:disabled,
+button:disabled:hover {
+  color: rgba(160, 170, 175, 0.75);
+  border-color: rgba(160, 170, 175, 0.35);
+  background: rgba(95, 105, 110, 0.08);
+  box-shadow: none;
+  cursor: default;
+  text-shadow: none;
+}
+
 input[type="date"], input[type="text"] {
   font-family: var(--mono);
   background: var(--hologram-panel-bg);
