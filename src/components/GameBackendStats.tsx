@@ -227,7 +227,7 @@ export function GameBackendStats({ game }: GameBackendStatsProps) {
   const awayTeamCards = getTeamStatCards(game.teams.away);
 
   return (
-    <BackendStatsDropdown title="Backend Stats">
+    <BackendStatsDropdown title="Raw Stats">
       <BackendKeyValueList title="Game Details" rows={gameRows} />
       <BackendStatCardGrid cards={homeTeamCards} title="Home Team Stats" />
       <BackendStatCardGrid cards={awayTeamCards} title="Away Team Stats" />

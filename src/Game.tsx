@@ -20,14 +20,13 @@ import {
 import { getGame } from './api'
 
 const gameQuickLinks = [
-  { href: '#game-story', label: 'Story' },
   { href: '#win-o-meter', label: 'Win-O-Meter' },
   { href: '#linescore', label: 'Linescore' },
   { href: '#game-insights', label: 'Insights' },
   { href: '#leaders', label: 'Leaders' },
   { href: '#team-metrics', label: 'Team Metrics' },
   { href: '#key-players', label: 'Key Players' },
-  { href: '#backend-stats', label: 'Backend Stats' },
+  { href: '#backend-stats', label: 'Raw Stats' },
 ] satisfies GameQuickLink[];
 
 /**
