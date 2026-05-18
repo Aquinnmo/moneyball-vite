@@ -21,6 +21,9 @@ export const ScheduleSchema = z.array(
     z.object({
         gamePk: z.number().positive(),
         gameDate: z.string(),
+        officialDate: maybe(z.string()),
+        scheduledStartUtc: maybe(z.string()),
+        scheduledStartTimeUtc: maybe(z.string()),
         teams: z.object({
             home: ScheduleTeamSchema,
             away: ScheduleTeamSchema,

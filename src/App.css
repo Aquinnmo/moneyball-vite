@@ -13,6 +13,35 @@ h2 {
   margin-bottom: 20px;
 }
 
+.games-section {
+  width: min(100%, 640px);
+  margin: 0 auto;
+}
+
+.games-list {
+  position: relative;
+  min-height: 260px;
+}
+
+.games-list__spinner.bd-spinner--overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  background-image: none;
+}
+
+.game-time-group {
+  margin: 0 auto 28px;
+}
+
+.game-time-heading {
+  margin: 0 auto 10px;
+  font-weight: normal;
+  color: var(--hologram-cyan);
+  text-transform: uppercase;
+  text-shadow: 0 0 5px var(--hologram-cyan-glow);
+}
+
 a {
   display: block;
   color: var(--hologram-cyan);

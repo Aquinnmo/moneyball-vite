@@ -1,0 +1,10 @@
+.spinner-message {
+  max-width: min(420px, 90vw);
+  margin: 0;
+  text-align: center;
+  transition: opacity 260ms ease-in-out;
+}
+
+.spinner-message--fading {
+  opacity: 0;
+}

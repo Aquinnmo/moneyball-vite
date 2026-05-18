@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './Game.css'
 import { useParams } from 'react-router';
 import type { GameData } from './types'
+import { formatGameDateTime } from './utils/dateTime'
 import { 
   PitchZoneSpinner,
   TeamTable, 
@@ -51,7 +52,7 @@ export function Game() {
         <>
           <div className="game-header">
             <h1>{`${game?.teams.away?.name} @ ${game?.teams.home?.name}`}</h1>
-            <h2>{`${game?.dateTime?.officialDate} - ${game?.dateTime?.time} ${game?.dateTime?.ampm}${game?.status == 'F' ? ' (F)' : ''}`}</h2>
+            <h2>{`${formatGameDateTime(game?.dateTime)}${game?.status == 'F' ? ' (F)' : ''}`}</h2>
           </div>
           <GameStoryHeader game={game} />
           <WinOMeter home={game?.teams.home} away={game?.teams.away} />

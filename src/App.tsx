@@ -1,34 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import type { Schedule } from './types'
 import { Link } from 'react-router';
 import { getTodayGames } from './api'
+import {
+  addDays,
+  formatDisplayDate,
+  formatScheduleGameStartTime,
+  getAvailableDateWindow,
+  getScheduleGameStartTimestamp,
+} from './utils/dateTime'
 import './App.css'
 import { BaseballDiamondSpinner } from './components';
-
-function formatDateYMD(date: Date) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function getAvailableDateWindow() {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  return {
-    todayStr: formatDateYMD(today),
-    latestAvailableDateStr: formatDateYMD(yesterday),
-  };
-}
-
-function addDays(dateStr: string, days: number) {
-  const parts = dateStr.split('-');
-  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-  d.setDate(d.getDate() + days);
-  return formatDateYMD(d);
-}
 
 /**
  * App Component
@@ -44,6 +27,19 @@ export function App() {
   const [currentDate, setCurrentDate] = useState(() => latestAvailableDateStr);
   const nextDate = addDays(currentDate, 1);
   const isNextDayDisabled = nextDate >= todayStr;
+  const gamesByStartTime = useMemo(() => {
+    const groupedGames = new Map<string, Schedule>();
+
+    [...schedule]
+      .sort((a, b) => getScheduleGameStartTimestamp(a) - getScheduleGameStartTimestamp(b))
+      .forEach((game) => {
+        const localStartTime = formatScheduleGameStartTime(game);
+        const games = groupedGames.get(localStartTime) ?? [];
+        groupedGames.set(localStartTime, [...games, game]);
+      });
+
+    return Array.from(groupedGames, ([startTime, games]) => ({ startTime, games }));
+  }, [schedule]);
 
   useEffect(() => {
     getTodayGames(currentDate)
@@ -64,7 +60,7 @@ export function App() {
       setCurrentDate(nextDate);
     }
   };
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
       setLoading(true);
       setCurrentDate(e.target.value > latestAvailableDateStr ? latestAvailableDateStr : e.target.value);
@@ -73,7 +69,7 @@ export function App() {
 
   return (
     <div>
-      <h1>Welcome to Moneyball</h1>
+      <h1>Moneyball</h1>
       
       <div className="date-controls">
         <button className="date-btn" onClick={handlePrevDay}>Previous Day</button>
@@ -86,17 +82,28 @@ export function App() {
         />
         <button className="date-btn" onClick={handleNextDay} disabled={isNextDayDisabled}>Next Day</button>
       </div>
-
-      {loading ? (
-        <BaseballDiamondSpinner message="Finding games..."/>
-      ) : (
-        <div>
-          <h2>Games for {currentDate}:</h2>
-            {schedule.map((game) => (
-              <Link key={game.gamePk} to={`/game/${game.gamePk}`}> <h3> {game.teams.away.team.name} @ {game.teams.home.team.name}</h3></Link>
-            ))}
+      <section className="games-section">
+        <h2>Games for {formatDisplayDate(currentDate)}:</h2>
+        <div className="games-list" aria-busy={loading}>
+          {loading ? (
+            <BaseballDiamondSpinner
+              message="Finding games..."
+              className="games-list__spinner"
+            />
+          ) : (
+            gamesByStartTime.map(({ startTime, games }) => (
+              <div key={startTime} className="game-time-group">
+                <h3 className="game-time-heading">{startTime}:</h3>
+                {games.map((game) => (
+                  <Link key={game.gamePk} to={`/game/${game.gamePk}`}>
+                    <h3>{game.teams.away.team.name} @ {game.teams.home.team.name}</h3>
+                  </Link>
+                ))}
+              </div>
+            ))
+          )}
         </div>
-      )}
+      </section>
     </div>
   ) 
 }

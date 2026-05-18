@@ -131,6 +131,8 @@ Detailed MLB schedule information.
 
 ### ParsedGame
 Simplified game representation.
+`gameDate` is the MLB official/baseball date (`YYYY-MM-DD`), not the UTC timestamp date.
+`scheduledStartUtc` preserves the MLB scheduled start instant, and `scheduledStartTimeUtc` is the parsed UTC time from that instant.
 ```json
 {
   "gamePk": "number",
@@ -139,7 +141,10 @@ Simplified game representation.
     "home": { "team": { "id": "number", "name": "string" } }
   },
   "venue": { "id": "number", "name": "string" },
-  "gameDate": "string"
+  "gameDate": "string",
+  "officialDate": "string",
+  "scheduledStartUtc": "string",
+  "scheduledStartTimeUtc": "string"
 }
 ```
 

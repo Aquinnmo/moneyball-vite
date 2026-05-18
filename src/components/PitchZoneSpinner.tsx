@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import './PitchZoneSpinner.css';
+import { SpinnerMessage } from './SpinnerMessage';
 
 const pitchFlashIntervalMs = 760;
 
@@ -77,7 +78,7 @@ export function PitchZoneSpinner({ message = "Loading...", overlay = true, class
           <span className="pz-flash" key={activePitchFlash.sequence} style={pitchFlashStyle}></span>
         </div>
       </div>
-      {message && <p className="pz-label">{message}</p>}
+      {message && <SpinnerMessage key={message} message={message} className="pz-label" />}
     </div>
   );
 }

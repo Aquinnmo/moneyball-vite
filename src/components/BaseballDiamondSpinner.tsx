@@ -1,4 +1,5 @@
 import './BaseballDiamondSpinner.css';
+import { SpinnerMessage } from './SpinnerMessage';
 
 export interface BaseballDiamondSpinnerProps {
   /** The message to display below the spinner. Default: "Loading..." */
@@ -33,7 +34,7 @@ export function BaseballDiamondSpinner({ message = "Loading...", overlay = true,
         <span className="bd-spinner__base bd-spinner__base--third"></span>
         <span className="bd-spinner__runner"></span>
       </div>
-      {message && <p className="bd-spinner__label">{message}</p>}
+      {message && <SpinnerMessage key={message} message={message} className="bd-spinner__label" />}
     </div>
   );
 }
