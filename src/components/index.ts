@@ -12,3 +12,6 @@ export * from './AdvancedGameAnalysis';
 export * from './GameScoreboard';
 export * from './GameStoryHeader';
 export * from './PlayerDetailTables';
+export * from './BackendStatsDropdown';
+export * from './BackendKeyValueList';
+export * from './GameBackendStats';

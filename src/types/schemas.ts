@@ -359,6 +359,9 @@ export const GameTeamSchema = z.object({
     expWinPitch: maybe(z.number()),
     expTimesOn: maybe(z.number()),
     expRunsAgainst: maybe(z.number()),
+    scoringChances: maybe(z.number()),
+    scoringChanceConversions: maybe(z.number()),
+    scoringChanceConversionRate: maybe(z.number()),
 });
 
 export const BattingLineSchema = z.object({
@@ -518,6 +521,9 @@ export const BatterSchema = z.object({
     avgBatSpeed: maybe(z.number()),
     maxBatSpeed: maybe(z.number()),
     avgExitVelo: maybe(z.number()),
+    rispPlateAppearances: maybe(z.number()),
+    rispConversions: maybe(z.number()),
+    rispConversionRate: maybe(z.number()),
     onHomeTeam: z.boolean(),
     abCount: maybe(z.number()),
     wobaCount: maybe(z.number()),

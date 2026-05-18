@@ -12,7 +12,8 @@ import {
   GameScoreboard,
   GameStoryHeader,
   BatterDetailTable,
-  PitcherDetailTable
+  PitcherDetailTable,
+  GameBackendStats
 } from './components'
 import { getGame } from './api'
 
@@ -59,7 +60,7 @@ export function Game() {
           <GameScoreboard game={game} />
           <KeyInsights game={game} />
           <AdvancedGameAnalysis game={game} />
-          <h2 className='section-title'>Team Stories</h2>
+          <h2 className='section-title'>Team Metrics</h2>
           <div className="teams-layout">
             <TeamTable team={game?.teams.away} opponent={game?.teams.home} />
             <TeamTable team={game?.teams.home} opponent={game?.teams.away} />
@@ -67,6 +68,7 @@ export function Game() {
           <h2 className='section-title' id="batters">Key Players</h2>
           <BatterDetailTable batters={game?.batters} />
           <PitcherDetailTable pitchers={game?.pitchers} />
+          <GameBackendStats game={game} />
         </>
       )}
     </div>
