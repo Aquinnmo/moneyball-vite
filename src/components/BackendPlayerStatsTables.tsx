@@ -15,10 +15,31 @@ type PlayerField<TPlayer> = BackendStatsTableColumn & {
   getValue: (player: TPlayer) => BackendStatsTableValue;
 };
 
+const POSITION_ABBREVIATIONS: Record<string, string> = {
+  '1': 'P',
+  '2': 'C',
+  '3': '1B',
+  '4': '2B',
+  '5': '3B',
+  '6': 'SS',
+  '7': 'LF',
+  '8': 'CF',
+  '9': 'RF',
+  '10': 'DH',
+};
+
 function playerName(player: Batter | Pitcher): string {
   const name = player.fullName || [player.firstName, player.lastName].filter(Boolean).join(' ');
 
   return name || `Player ${player.id}`;
+}
+
+function formatPosition(position: Batter['position']): BackendStatsTableValue {
+  if (position == null || position === '') {
+    return position;
+  }
+
+  return POSITION_ABBREVIATIONS[position.trim()] ?? position;
 }
 
 const batterField = (
@@ -40,7 +61,7 @@ const pitcherField = (
 const batterFields: PlayerField<Batter>[] = [
   batterField('player', 'Player', 'Player', (batter) => playerName(batter)),
   batterField('primaryNumber', '#', 'Info', (batter) => batter.primaryNumber),
-  batterField('position', 'Pos', 'Info', (batter) => batter.position),
+  batterField('position', 'Pos', 'Info', (batter) => formatPosition(batter.position)),
   batterField('batHand', 'Bat Hand', 'Info', (batter) => batter.batHand),
   batterField('hits', 'Hits', 'Game', (batter) => batter.hits, true),
   batterField('runs', 'Runs', 'Game', (batter) => batter.runs),
@@ -135,7 +156,6 @@ const pitcherFields: PlayerField<Pitcher>[] = [
   pitcherField('expBases', 'Exp Bases', 'Game', (pitcher) => pitcher.expBases),
   pitcherField('battersFaced', 'BF', 'Game', (pitcher) => pitcher.battersFaced),
   pitcherField('outs', 'Outs', 'Game', (pitcher) => pitcher.outs),
-  pitcherField('runsAgainst', 'Runs Against', 'Game', (pitcher) => pitcher.runsAgainst),
   pitcherField('expRunsAgainst', 'Exp Runs Against', 'Game', (pitcher) => pitcher.expRunsAgainst),
   pitcherField('maxExitVelo', 'Max EV', 'Game', (pitcher) => pitcher.maxExitVelo),
   pitcherField('avgExitVelo', 'Avg EV', 'Game', (pitcher) => pitcher.avgExitVelo),
