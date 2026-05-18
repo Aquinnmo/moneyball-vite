@@ -18,7 +18,7 @@ export interface BackendStatsDropdownProps {
  */
 export function BackendStatsDropdown({ title, children }: BackendStatsDropdownProps) {
   return (
-    <section className="backend-stats-panel hologram-bracket" aria-labelledby="backend-stats-title">
+    <section className="backend-stats-panel hologram-bracket" id="backend-stats" aria-labelledby="backend-stats-title">
       <details className="backend-stats-dropdown">
         <summary>
           <span id="backend-stats-title">{title}</span>

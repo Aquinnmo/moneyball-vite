@@ -11,11 +11,24 @@ import {
   AdvancedGameAnalysis,
   GameScoreboard,
   GameStoryHeader,
+  GameQuickLinks,
   BatterDetailTable,
   PitcherDetailTable,
-  GameBackendStats
+  GameBackendStats,
+  type GameQuickLink
 } from './components'
 import { getGame } from './api'
+
+const gameQuickLinks = [
+  { href: '#game-story', label: 'Story' },
+  { href: '#win-o-meter', label: 'Win-O-Meter' },
+  { href: '#linescore', label: 'Linescore' },
+  { href: '#game-insights', label: 'Insights' },
+  { href: '#leaders', label: 'Leaders' },
+  { href: '#team-metrics', label: 'Team Metrics' },
+  { href: '#key-players', label: 'Key Players' },
+  { href: '#backend-stats', label: 'Backend Stats' },
+] satisfies GameQuickLink[];
 
 /**
  * Game Component
@@ -55,17 +68,20 @@ export function Game() {
             <h1>{`${game?.teams.away?.name} @ ${game?.teams.home?.name}`}</h1>
             <h2>{`${formatGameDateTime(game?.dateTime)}${game?.status == 'F' ? ' (F)' : ''}`}</h2>
           </div>
-          <GameStoryHeader game={game} />
+          <div className="game-story-stack">
+            <GameQuickLinks links={gameQuickLinks} />
+            <GameStoryHeader game={game} />
+          </div>
           <WinOMeter home={game?.teams.home} away={game?.teams.away} />
           <GameScoreboard game={game} />
           <KeyInsights game={game} />
           <AdvancedGameAnalysis game={game} />
-          <h2 className='section-title'>Team Metrics</h2>
+          <h2 className='section-title' id="team-metrics">Team Metrics</h2>
           <div className="teams-layout">
             <TeamTable team={game?.teams.away} opponent={game?.teams.home} />
             <TeamTable team={game?.teams.home} opponent={game?.teams.away} />
           </div>
-          <h2 className='section-title' id="batters">Key Players</h2>
+          <h2 className='section-title' id="key-players">Key Players</h2>
           <BatterDetailTable batters={game?.batters} />
           <PitcherDetailTable pitchers={game?.pitchers} />
           <GameBackendStats game={game} />
